@@ -1,0 +1,54 @@
+﻿/* ------------------------------------------------------------------------- *
+thZero.NetCore.Library.Asp
+Copyright (C) 2016-2018 thZero.com
+
+<development [at] thzero [dot] com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ * ------------------------------------------------------------------------- */
+
+using System;
+
+namespace thZero.AspNetCore.Mvc.Views.Models
+{
+	public sealed class EditRequestViewModel : RequestViewModel, IEditViewModel
+	{
+		public EditRequestViewModel()
+		{
+		}
+
+		#region Public Properties
+		public string Action { get; set; }
+		public Guid CorrelationKey { get; set; }
+		#endregion
+	}
+
+	public abstract class EditRequestViewModel<T> : IEditViewModel<T>
+	{
+		#region Public Methods
+		public virtual void InitializeSubmit(IEditViewModel model)
+		{
+			Enforce.AgainstNull(() => model);
+
+			Id = ((EditRequestViewModel<T>)model).Id;
+			CorrelationKey = model.CorrelationKey;
+		}
+		#endregion
+
+		#region Public Properties
+		public virtual string Action { get; set; }
+		public Guid CorrelationKey { get; set; }
+		public virtual T Id { get; set; }
+		#endregion
+	}
+}

@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<AssemblyName>thZero.NetCore.Library.Asp</AssemblyName>
+		<PackageId>thZero.NetCore.Library.Asp</PackageId>
+		<PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</PackageLicenseUrl>
+		<RepositoryUrl>https://github.com/thzero/thZero.NetCore.Library.Asp</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/thzero/thZero.NetCore.Library.Asp</PackageProjectUrl>
+		<RepositoryType>GitHub</RepositoryType>
+		<Authors>thZero.com</Authors>
+		<Copyright></Copyright>
+		<Description />
+		<RootNamespace>thZero.AspNetCore</RootNamespace>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<Compile Include="..\thZero.NetCore.Library\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Https" Version="2.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.1" />
+		<PackageReference Include="System.Runtime.Serialization.Json" Version="4.3.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\thZero.NetCore.Library\thZero.NetCore.Library.csproj" />
+	</ItemGroup>
+
+</Project>
