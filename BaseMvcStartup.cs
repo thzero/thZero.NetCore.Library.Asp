@@ -62,9 +62,10 @@ namespace thZero.AspNetCore
 			Utilities.Web.Environment.IsStaging = env.IsStaging();
 
 			ConfigureInitializeServiceProvider(svp);
-			ConfigureInitialize(app, env, loggerFactory, svp);
+            ConfigureInitializeLoggerFactory(loggerFactory);
+            ConfigureInitialize(app, env, loggerFactory, svp);
 
-			ConfigureInitializeSsl(app, env);
+            ConfigureInitializeSsl(app, env);
 			_useCompression = ConfigureInitializeCompression(app, env);
 
 			var defaultCultureName = "en";
@@ -109,7 +110,7 @@ namespace thZero.AspNetCore
 			// Doing some initialization and the ConfigurationBuilder here so that
 			// we do not have virtual methods in the constructor.
 			ConfigurationBuilder builder = new ConfigurationBuilder();
-			ConfigurationBuilderInitialize(env, builder);
+            ConfigureServicesInitializeBuilder(env, builder);
 			Configuration = builder.Build();
 
 			ConfigureServicesInitializeMvcPre(services);
@@ -121,18 +122,13 @@ namespace thZero.AspNetCore
 			// Only if UseCompression middleware was enabled on the IApplicationBuilder...
 			if (_useCompression)
 			{
-				ConfigurationServicesInitializeCompression(services);
-				ConfigurationServicesInitializeCompressionOptions(services);
+				ConfigureServicesInitializeCompression(services);
+				ConfigureServicesInitializeCompressionOptions(services);
 			}
 		}
 		#endregion
 
 		#region Protected Methods
-		protected virtual void ConfigurationBuilderInitialize(IHostingEnvironment env, ConfigurationBuilder builder)
-		{
-			builder.SetBasePath(env.ContentRootPath);
-		}
-
 		protected virtual void ConfigureInitialize(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
 		{
 			if (env.IsDevelopment())
@@ -141,12 +137,21 @@ namespace thZero.AspNetCore
 				ConfigureInitializeProduction(app, env, loggerFactory, svp);
 		}
 
-		protected virtual void ConfigureInitializeDebug(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        protected virtual void ConfigureServicesInitializeBuilder(IHostingEnvironment env, ConfigurationBuilder builder)
+        {
+            builder.SetBasePath(env.ContentRootPath);
+        }
+
+        protected virtual void ConfigureInitializeDebug(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
 		{
 			app.UseDeveloperExceptionPage();
-		}
+        }
 
-		protected abstract void ConfigureInitializeProduction(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
+        protected virtual void ConfigureInitializeLoggerFactory(ILoggerFactory loggerFactory)
+        {
+        }
+
+        protected abstract void ConfigureInitializeProduction(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
 
 		protected virtual bool ConfigureInitializeCompression(IApplicationBuilder app, IHostingEnvironment env)
 		{
@@ -166,10 +171,14 @@ namespace thZero.AspNetCore
 		{
 		}
 
-		protected virtual void ConfigureInitializeSsl(IApplicationBuilder app, IHostingEnvironment env)
+		protected virtual void ConfigureInitializeServiceProvider(IServiceProvider svp)
 		{
-			if (Utilities.Web.Environment.RequiresSsl)
-				return;
+        }
+
+        protected virtual void ConfigureInitializeSsl(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (!Utilities.Web.Environment.RequiresSsl)
+                return;
 
 #if !DEBUG
 			var options = new RewriteOptions()
@@ -178,13 +187,9 @@ namespace thZero.AspNetCore
 
 			app.UseRewriter(options);
 #endif
-		}
+        }
 
-		protected virtual void ConfigureInitializeServiceProvider(IServiceProvider svp)
-		{
-		}
-
-		protected virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services)
+        protected virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services)
 		{
 		}
 
@@ -194,7 +199,7 @@ namespace thZero.AspNetCore
 			services.AddResponseCompression();
 		}
 
-		protected virtual void ConfigurationServicesInitializeCompression(IServiceCollection services)
+		protected virtual void ConfigureServicesInitializeCompression(IServiceCollection services)
 		{
 			services.AddResponseCompression(options =>
 			{
@@ -202,7 +207,7 @@ namespace thZero.AspNetCore
 			});
 		}
 
-		protected virtual void ConfigurationServicesInitializeCompressionOptions(IServiceCollection services)
+		protected virtual void ConfigureServicesInitializeCompressionOptions(IServiceCollection services)
 		{
 			services.Configure<GzipCompressionProviderOptions>(options =>
 			{
