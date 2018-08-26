@@ -38,7 +38,6 @@ namespace thZero.Utilities.Web
 		public static bool IsDevelopment { get; set; }
 		public static bool IsProduction { get; set; }
 		public static bool IsStaging { get; set; }
-		public static bool RequiresSsl { get; set; }
 		#endregion
 	}
 

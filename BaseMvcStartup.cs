@@ -61,14 +61,24 @@ namespace thZero.AspNetCore
 			Utilities.Web.Environment.IsProduction = env.IsProduction();
 			Utilities.Web.Environment.IsStaging = env.IsStaging();
 
-			ConfigureInitializeServiceProvider(svp);
+            ConfigureInitializeServiceProvider(svp);
             ConfigureInitializeLoggerFactory(loggerFactory);
+
+            if (RequiresSsl)
+            {
+                app.UseHsts(opts => opts.AllResponses());
+                ConfigureInitializeSsl(app, env);
+            }
+
+            _useCompression = ConfigureInitializeCompression(app, env);
+
             ConfigureInitialize(app, env, loggerFactory, svp);
 
-            ConfigureInitializeSsl(app, env);
-			_useCompression = ConfigureInitializeCompression(app, env);
+            ConfigureInitializeStaticPre(app, env);
+            ConfigureInitializeStatic(app, env);
+            ConfigureInitializeStaticPost(app, env);
 
-			var defaultCultureName = "en";
+            var defaultCultureName = "en";
 			var defaultCulture = new CultureInfo(defaultCultureName);
 			var config = Utilities.Web.Configuration.Application;
 			IList<CultureInfo> supportedCultures = new List<CultureInfo>();
@@ -95,7 +105,9 @@ namespace thZero.AspNetCore
 			app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
 			ConfigureInitializeRoutes(app);
-		}
+
+            ConfigureInitializeFinal(app, env, loggerFactory, svp);
+        }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		// This gets called before Configure.
@@ -135,11 +147,12 @@ namespace thZero.AspNetCore
 				ConfigureInitializeDebug(app, env, loggerFactory, svp);
 			else
 				ConfigureInitializeProduction(app, env, loggerFactory, svp);
-		}
+        }
 
-        protected virtual void ConfigureServicesInitializeBuilder(IHostingEnvironment env, ConfigurationBuilder builder)
+        protected virtual bool ConfigureInitializeCompression(IApplicationBuilder app, IHostingEnvironment env)
         {
-            builder.SetBasePath(env.ContentRootPath);
+            app.UseResponseCompression();
+            return true;
         }
 
         protected virtual void ConfigureInitializeDebug(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
@@ -147,17 +160,15 @@ namespace thZero.AspNetCore
 			app.UseDeveloperExceptionPage();
         }
 
+        protected virtual void ConfigureInitializeFinal(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        {
+        }
+
         protected virtual void ConfigureInitializeLoggerFactory(ILoggerFactory loggerFactory)
         {
         }
 
         protected abstract void ConfigureInitializeProduction(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
-
-		protected virtual bool ConfigureInitializeCompression(IApplicationBuilder app, IHostingEnvironment env)
-		{
-			app.UseResponseCompression();
-			return true;
-		}
 
 		protected virtual void ConfigureInitializeRoutes(IApplicationBuilder app)
 		{
@@ -177,9 +188,6 @@ namespace thZero.AspNetCore
 
         protected virtual void ConfigureInitializeSsl(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (!Utilities.Web.Environment.RequiresSsl)
-                return;
-
 #if !DEBUG
 			var options = new RewriteOptions()
 				//.AddRedirectToHttps();
@@ -187,6 +195,28 @@ namespace thZero.AspNetCore
 
 			app.UseRewriter(options);
 #endif
+        }
+
+        protected virtual void ConfigureInitializeStatic(IApplicationBuilder app, IHostingEnvironment env)
+        {
+        }
+
+        protected virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            app.UseXContentTypeOptions();
+            app.UseReferrerPolicy(opts => opts.NoReferrer());
+            app.UseXDownloadOptions();
+            app.UseXXssProtection(opts => opts.Enabled());
+        }
+
+        protected virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            app.UseNoCacheHttpHeaders();
+        }
+
+        protected virtual void ConfigureServicesInitializeBuilder(IHostingEnvironment env, ConfigurationBuilder builder)
+        {
+            builder.SetBasePath(env.ContentRootPath);
         }
 
         protected virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services)
@@ -218,11 +248,12 @@ namespace thZero.AspNetCore
 
 		#region Protected Properties
 		protected IConfigurationRoot Configuration { get; set; }
-		protected static IServiceCollection ServiceCollection { get; private set; }
-		#endregion
+        protected abstract bool RequiresSsl { get; }
+        protected static IServiceCollection ServiceCollection { get; private set; }
+        #endregion
 
-		#region Fields
-		private bool _useCompression = false;
+        #region Fields
+        private bool _useCompression = false;
 		#endregion
 	}
 }

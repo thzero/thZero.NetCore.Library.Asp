@@ -261,9 +261,9 @@ namespace thZero.AspNetCore.Mvc
 		#endregion
 
 		#region Constants
-		private const string ActionCancel = "cancel";
-		private const string ActionDelete = "delete";
-		private const string ActionSave = "save";
+		protected const string ActionCancel = "cancel";
+        protected const string ActionDelete = "delete";
+        protected const string ActionSave = "save";
 		#endregion
 	}
 }
