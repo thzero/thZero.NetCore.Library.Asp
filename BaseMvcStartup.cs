@@ -23,6 +23,7 @@ using System.Globalization;
 using System.IO.Compression;
 using System.Linq;
 
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
@@ -129,7 +130,8 @@ namespace thZero.AspNetCore
 
 			services.AddMvc();
 
-			ConfigureServicesInitializeMvcPost(services);
+            ConfigureServicesInitializeMvcAntiforgery(services);
+            ConfigureServicesInitializeMvcPost(services);
 
 			// Only if UseCompression middleware was enabled on the IApplicationBuilder...
 			if (_useCompression)
@@ -219,9 +221,30 @@ namespace thZero.AspNetCore
             builder.SetBasePath(env.ContentRootPath);
         }
 
+        protected virtual void ConfigureServicesInitializeMvcAntiforgery(IServiceCollection services)
+        {
+            string antiforgeryTokenName = ConfigureServicesInitializeMvcAntiforgeryTokenGenerate();
+            if (string.IsNullOrEmpty(antiforgeryTokenName))
+                return;
+
+            services.AddAntiforgery(options => ConfigureServicesInitializeMvcAntiforgery(options, antiforgeryTokenName));
+        }
+
+        protected virtual void ConfigureServicesInitializeMvcAntiforgery(AntiforgeryOptions options, string antiforgeryTokenName)
+        {
+            options.Cookie.Name = antiforgeryTokenName;
+        }
+
+        protected virtual string ConfigureServicesInitializeMvcAntiforgeryTokenGenerate()
+        {
+            return null;
+        }
+
         protected virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services)
 		{
-		}
+            if (!string.IsNullOrEmpty(Localization))
+                services.AddLocalization(options => options.ResourcesPath = Localization);
+        }
 
 		protected virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services)
 		{
@@ -243,17 +266,22 @@ namespace thZero.AspNetCore
 			{
 				options.Level = CompressionLevel.Fastest;
 			});
-		}
-		#endregion
+        }
+        #endregion
 
-		#region Protected Properties
-		protected IConfigurationRoot Configuration { get; set; }
+        #region Protected Properties
+        protected IConfigurationRoot Configuration { get; set; }
+        protected virtual string Localization { get { return KeyLocalization; } }
         protected abstract bool RequiresSsl { get; }
         protected static IServiceCollection ServiceCollection { get; private set; }
         #endregion
 
         #region Fields
         private bool _useCompression = false;
-		#endregion
-	}
+        #endregion
+
+        #region Constants
+        protected const string KeyLocalization = "Resources";
+        #endregion
+    }
 }
