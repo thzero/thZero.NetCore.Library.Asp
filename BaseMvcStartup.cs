@@ -189,11 +189,11 @@ namespace thZero.AspNetCore
         protected virtual void ConfigureInitializeSsl(IApplicationBuilder app, IHostingEnvironment env)
         {
 #if !DEBUG
-			var options = new RewriteOptions()
-				//.AddRedirectToHttps();
-				.AddRedirectToHttpsPermanent();
+            var options = new RewriteOptions()
+                //.AddRedirectToHttps();
+                .AddRedirectToHttpsPermanent();
 
-			app.UseRewriter(options);
+            app.UseRewriter(options);
 #endif
         }
 
@@ -203,15 +203,15 @@ namespace thZero.AspNetCore
 
         protected virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseXContentTypeOptions();
-            app.UseReferrerPolicy(opts => opts.NoReferrer());
-            app.UseXDownloadOptions();
-            app.UseXXssProtection(opts => opts.Enabled());
+            //app.UseXContentTypeOptions();
+            //app.UseReferrerPolicy(opts => opts.NoReferrer());
+            //app.UseXDownloadOptions();
+            //app.UseXXssProtection(opts => opts.Enabled());
         }
 
         protected virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseNoCacheHttpHeaders();
+            //app.UseNoCacheHttpHeaders();
         }
 
         protected virtual void ConfigureServicesInitializeBuilder(IHostingEnvironment env, ConfigurationBuilder builder)
