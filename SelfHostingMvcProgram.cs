@@ -26,9 +26,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace thZero.AspNetCore
 {
-	public abstract class SelfHostingMvcProgram<TProgram, TStartup> : IMvcProgram
-		where TProgram : IMvcProgram
-		where TStartup : BaseMvcStartup
+	public abstract class SelfHostingMvcProgram<TProgram, TStartup>
+		where TProgram : SelfHostingMvcProgram<TProgram, TStartup>
+        where TStartup : BaseMvcStartup
 	{
 		#region Public Methods
 		public static void Start(string[] args)

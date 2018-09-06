@@ -28,10 +28,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.AspNetCore.Routing;
 #if !DEBUG
 using Microsoft.AspNetCore.Rewrite;
 #endif
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -39,7 +39,7 @@ using Microsoft.Extensions.Logging;
 namespace thZero.AspNetCore
 {
 	public abstract class BaseMvcStartup
-	{
+    {
 		protected BaseMvcStartup(IHostingEnvironment env)
 		{
 		}
@@ -203,17 +203,17 @@ namespace thZero.AspNetCore
         {
         }
 
+        protected virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            //app.UseNoCacheHttpHeaders();
+        }
+
         protected virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env)
         {
             //app.UseXContentTypeOptions();
             //app.UseReferrerPolicy(opts => opts.NoReferrer());
             //app.UseXDownloadOptions();
             //app.UseXXssProtection(opts => opts.Enabled());
-        }
-
-        protected virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            //app.UseNoCacheHttpHeaders();
         }
 
         protected virtual void ConfigureServicesInitializeBuilder(IHostingEnvironment env, ConfigurationBuilder builder)
