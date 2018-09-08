@@ -36,6 +36,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using thZero.Services;
+
 namespace thZero.AspNetCore
 {
 	public abstract class BaseMvcStartup
@@ -67,7 +69,12 @@ namespace thZero.AspNetCore
 
             if (RequiresSsl)
             {
-                app.UseHsts(opts => opts.AllResponses());
+                IServiceHttpSecurity serviceSecurity = svp.GetRequiredService<IServiceHttpSecurity>();
+                if (serviceSecurity == null)
+                    serviceSecurity = Factory.Instance.Retrieve<IServiceHttpSecurity>();
+                if (serviceSecurity != null)
+                    serviceSecurity.InitializeSsl(app);
+
                 ConfigureInitializeSsl(app, env);
             }
 
@@ -75,9 +82,9 @@ namespace thZero.AspNetCore
 
             ConfigureInitialize(app, env, loggerFactory, svp);
 
-            ConfigureInitializeStaticPre(app, env);
-            ConfigureInitializeStatic(app, env);
-            ConfigureInitializeStaticPost(app, env);
+            ConfigureInitializeStaticPre(app, env, svp);
+            ConfigureInitializeStatic(app, env, svp);
+            ConfigureInitializeStaticPost(app, env, svp);
 
             var defaultCultureName = "en";
 			var defaultCulture = new CultureInfo(defaultCultureName);
@@ -199,21 +206,34 @@ namespace thZero.AspNetCore
 #endif
         }
 
-        protected virtual void ConfigureInitializeStatic(IApplicationBuilder app, IHostingEnvironment env)
+        protected virtual void ConfigureInitializeStatic(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
         }
 
-        protected virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env)
+        protected virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
-            //app.UseNoCacheHttpHeaders();
+            IServiceHttpSecurity serviceSecurity = svp.GetRequiredService<IServiceHttpSecurity>();
+            if (serviceSecurity == null)
+            {
+                serviceSecurity = Factory.Instance.Retrieve<IServiceHttpSecurity>();
+                if (serviceSecurity == null)
+                    return;
+            }
+
+            serviceSecurity.InitializeStaticPost(app);
         }
 
-        protected virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env)
+        protected virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
-            //app.UseXContentTypeOptions();
-            //app.UseReferrerPolicy(opts => opts.NoReferrer());
-            //app.UseXDownloadOptions();
-            //app.UseXXssProtection(opts => opts.Enabled());
+            IServiceHttpSecurity serviceSecurity = svp.GetRequiredService<IServiceHttpSecurity>();
+            if (serviceSecurity == null)
+            {
+                serviceSecurity = Factory.Instance.Retrieve<IServiceHttpSecurity>();
+                if (serviceSecurity == null)
+                    return;
+            }
+
+            serviceSecurity.InitializeStaticPre(app);
         }
 
         protected virtual void ConfigureServicesInitializeBuilder(IHostingEnvironment env, ConfigurationBuilder builder)

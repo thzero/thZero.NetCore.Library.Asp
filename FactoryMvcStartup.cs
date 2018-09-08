@@ -53,12 +53,20 @@ namespace thZero.AspNetCore
 		{
 			base.ConfigureInitialize(app, env, loggerFactory, svp);
 
-			Factory.Instance.AddSingleton<ILoggerFactory>(loggerFactory);
+            ConfigureInitializeServicesFactoryLoggerFactory(svp, loggerFactory);
+            ConfigureInitializeServicesFactory(svp);
+        }
 
-			InitializeServicesFactory(svp);
-		}
+        protected virtual void ConfigureInitializeServicesFactory(IServiceProvider svp)
+        {
+        }
 
-		protected override void ConfigureServicesInitializeMvcPost(IServiceCollection services)
+        protected virtual void ConfigureInitializeServicesFactoryLoggerFactory(IServiceProvider svp, ILoggerFactory loggerFactory)
+        {
+            Factory.Instance.AddSingleton<ILoggerFactory>(loggerFactory);
+        }
+
+        protected override void ConfigureServicesInitializeMvcPost(IServiceCollection services)
 		{
 			base.ConfigureServicesInitializeMvcPost(services);
 
@@ -68,10 +76,6 @@ namespace thZero.AspNetCore
 		}
 
 		protected virtual void ConfigureServicesInitializeFactory(IServiceCollection services)
-		{
-		}
-
-		protected virtual void InitializeServicesFactory(IServiceProvider svp)
 		{
 		}
 		#endregion
