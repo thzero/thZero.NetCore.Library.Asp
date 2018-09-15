@@ -102,7 +102,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				if (Request.IsAjaxRequest())
 					return (isPost ? JsonPostFailure() : JsonGetFailure());
 				throw;
@@ -156,7 +156,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				if (Request.IsAjaxRequest())
 					return await Task.FromResult((isPost ? JsonPostFailure() : JsonGetFailure()));
 				throw;

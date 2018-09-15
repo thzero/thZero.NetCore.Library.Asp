@@ -208,7 +208,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				if (Request.IsAjaxRequest())
 					return JsonPostFailure();
 				throw;
@@ -310,7 +310,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				if (Request.IsAjaxRequest())
 					return await Task.FromResult(JsonPostFailure());
 				throw;
@@ -453,7 +453,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				if (Request.IsAjaxRequest())
 					return JsonPostFailure();
 				throw;
@@ -554,7 +554,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				if (Request.IsAjaxRequest())
 					return await Task.FromResult(JsonPostFailure());
 				throw;
@@ -646,7 +646,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				throw;
 			}
 		}
@@ -689,7 +689,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				throw;
 			}
 		}
@@ -723,7 +723,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				throw;
 			}
 		}
@@ -757,7 +757,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				throw;
 			}
 		}

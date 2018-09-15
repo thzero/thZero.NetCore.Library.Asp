@@ -60,7 +60,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				throw;
 			}
 		}
@@ -93,7 +93,7 @@ namespace thZero.AspNetCore.Mvc
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(Declaration, ex);
+				Logger?.LogError(Declaration, ex);
 				throw;
 			}
 		}

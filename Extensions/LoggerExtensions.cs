@@ -54,12 +54,12 @@ namespace thZero.AspNetCore
 
 		public static void LogError(this ILogger logger, string method, Exception ex)
 		{
-			logger.LogError(LogFormat(logger, method, ex));
+			logger?.LogError(LogFormat(logger, method, ex));
 		}
 
 		public static void LogError(this ILogger logger, string method, string message, Exception ex)
 		{
-			logger.LogError(LogFormat(logger, method, ex));
+			logger?.LogError(LogFormat(logger, method, ex));
 		}
 		#endregion
 
