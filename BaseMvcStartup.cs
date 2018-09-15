@@ -54,12 +54,15 @@ namespace thZero.AspNetCore
 		{
 #if NETSTANDARD2_0
 			Utilities.Services.Version.Instance.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
+
+            IServiceVersionInformation serviceVersionInformation = svp.GetService<IServiceVersionInformation>();
+            serviceVersionInformation.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
 #else
 			var version = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion;
 			Utilities.Services.Web.Version.Instance.Version = new Version(version);
 #endif
 
-			Utilities.Services.Web.ServiceProvider.Instance = svp;
+            Utilities.Services.Web.ServiceProvider.Instance = svp;
 			Utilities.Web.Environment.IsDevelopment = env.IsDevelopment();
 			Utilities.Web.Environment.IsProduction = env.IsProduction();
 			Utilities.Web.Environment.IsStaging = env.IsStaging();
@@ -69,11 +72,8 @@ namespace thZero.AspNetCore
 
             if (RequiresSsl)
             {
-                IServiceHttpSecurity serviceSecurity = svp.GetRequiredService<IServiceHttpSecurity>();
-                if (serviceSecurity == null)
-                    serviceSecurity = Factory.Instance.Retrieve<IServiceHttpSecurity>();
-                if (serviceSecurity != null)
-                    serviceSecurity.InitializeSsl(app);
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.InitializeSsl(app));
 
                 ConfigureInitializeSsl(app, env);
             }
@@ -133,15 +133,26 @@ namespace thZero.AspNetCore
             ConfigureServicesInitializeBuilder(env, builder);
 			Configuration = builder.Build();
 
-			ConfigureServicesInitializeMvcPre(services);
+            RegisterStartupExtensions();
+
+            services.AddSingleton<IServiceVersionInformation, ServiceVersionInformation>();
+
+            ConfigureServicesInitializeMvcPre(services);
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.InitializeMvcPre(services, Configuration));
 
 			services.AddMvc();
 
             ConfigureServicesInitializeMvcAntiforgery(services);
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.InitializeMvcPost(services, Configuration));
+
             ConfigureServicesInitializeMvcPost(services);
 
-			// Only if UseCompression middleware was enabled on the IApplicationBuilder...
-			if (_useCompression)
+            // Only if UseCompression middleware was enabled on the IApplicationBuilder...
+            if (_useCompression)
 			{
 				ConfigureServicesInitializeCompression(services);
 				ConfigureServicesInitializeCompressionOptions(services);
@@ -212,28 +223,18 @@ namespace thZero.AspNetCore
 
         protected virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
-            IServiceHttpSecurity serviceSecurity = svp.GetRequiredService<IServiceHttpSecurity>();
-            if (serviceSecurity == null)
-            {
-                serviceSecurity = Factory.Instance.Retrieve<IServiceHttpSecurity>();
-                if (serviceSecurity == null)
-                    return;
-            }
+            if (StartupExtensions == null)
+                return;
 
-            serviceSecurity.InitializeStaticPost(app);
+            StartupExtensions.ToList().ForEach(l => l.InitializeStaticPost(app));
         }
 
         protected virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
-            IServiceHttpSecurity serviceSecurity = svp.GetRequiredService<IServiceHttpSecurity>();
-            if (serviceSecurity == null)
-            {
-                serviceSecurity = Factory.Instance.Retrieve<IServiceHttpSecurity>();
-                if (serviceSecurity == null)
-                    return;
-            }
+            if (StartupExtensions == null)
+                return;
 
-            serviceSecurity.InitializeStaticPre(app);
+            StartupExtensions.ToList().ForEach(l => l.InitializeStaticPre(app));
         }
 
         protected virtual void ConfigureServicesInitializeBuilder(IHostingEnvironment env, ConfigurationBuilder builder)
@@ -287,6 +288,18 @@ namespace thZero.AspNetCore
 				options.Level = CompressionLevel.Fastest;
 			});
         }
+
+        protected virtual void RegisterStartupExtension(IStartupExtension extension)
+        {
+            if (extension == null)
+                return;
+
+            StartupExtensions.Add(extension);
+        }
+
+        protected virtual void RegisterStartupExtensions()
+        {
+        }
         #endregion
 
         #region Protected Properties
@@ -294,6 +307,7 @@ namespace thZero.AspNetCore
         protected virtual string Localization { get { return KeyLocalization; } }
         protected abstract bool RequiresSsl { get; }
         protected static IServiceCollection ServiceCollection { get; private set; }
+        protected ICollection<IStartupExtension> StartupExtensions { get; } = new List<IStartupExtension>();
         #endregion
 
         #region Fields
