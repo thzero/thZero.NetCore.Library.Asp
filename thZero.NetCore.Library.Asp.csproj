@@ -44,9 +44,5 @@
 	<ItemGroup>
 		<ProjectReference Include="..\thZero.NetCore.Library\thZero.NetCore.Library.csproj" />
 	</ItemGroup>
-	
-	<ItemGroup>
-	  <Folder Include="Instrumentation\" />
-	</ItemGroup>
 
 </Project>
