@@ -42,23 +42,20 @@ namespace thZero.AspNetCore.Mvc
 
 			_errors.Add(error);
 		}
-		#endregion
+        #endregion
 
-		#region Public Properties
-		public IEnumerable<Error> Errors
-		{
-			get { return _errors; }
-		}
+        #region Public Properties
+        public IEnumerable<Error> Errors => _errors;
 
-		public bool Success
-		{
-			get { return (_errors.Count > 0) || _success; }
-			set { _success = value; }
-		}
-		#endregion
+        public bool Success
+        {
+            get => (_errors.Count > 0) || _success;
+            set => _success = value;
+        }
+        #endregion
 
-		#region Fields
-		private ICollection<Error> _errors = new List<Error>();
+        #region Fields
+        private ICollection<Error> _errors = new List<Error>();
 		private bool _success;
 		#endregion
 

@@ -39,20 +39,20 @@ namespace thZero.AspNetCore.Results
 				message = string.Format(message, args);
 			_errors.Add(new ErrorMessage() { Message = message, InputElement = inputElement });
 		}
-		#endregion
+        #endregion
 
-		#region Public Properties
-		public IEnumerable<ErrorMessage> Errors { get { return _errors; } }
+        #region Public Properties
+        public IEnumerable<ErrorMessage> Errors => _errors;
 
 		public bool IsCancel { get; set; }
 		public bool IsDelete { get; set; }
 		public bool IsSave { get; set; }
 
-		public bool Success { get { return _errors.Count() == 0; } }
-		#endregion
+		public bool Success => _errors.Count() == 0;
+        #endregion
 
-		#region Fields
-		private ICollection<ErrorMessage> _errors = new List<ErrorMessage>();
+        #region Fields
+        private ICollection<ErrorMessage> _errors = new List<ErrorMessage>();
 		#endregion
 
 		public class ErrorMessage

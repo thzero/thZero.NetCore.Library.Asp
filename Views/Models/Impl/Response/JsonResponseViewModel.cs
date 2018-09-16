@@ -51,16 +51,16 @@ namespace thZero.AspNetCore.Mvc.Views.Models
 			_success = false;
 			return this;
 		}
-		#endregion
+        #endregion
 
-		#region Public Properties
-		public IEnumerable<ErrorMessage> Messages { get { return _messages; } }
+        #region Public Properties
+        public IEnumerable<ErrorMessage> Messages => _messages;
 
-		public bool Success
-		{
-			get { return (_messages.Count > 0) || _success; }
-			set { _success = value; }
-		}
+        public bool Success
+        {
+            get => (_messages.Count > 0) || _success;
+            set => _success = value;
+        }
 		#endregion
 
 		#region Fields

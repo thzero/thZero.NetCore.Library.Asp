@@ -185,10 +185,7 @@ namespace thZero.Utilities.Services.Web
 	public static class DataFormat
 	{
 		#region Public Properties
-		public static IServiceDataFormat Instance
-		{
-			get { return Factory.Instance.Retrieve<IServiceDataFormat>(); }
-		}
+		public static IServiceDataFormat Instance => Factory.Instance.Retrieve<IServiceDataFormat>();
 		#endregion
 	}
 
