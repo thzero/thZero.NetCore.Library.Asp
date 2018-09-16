@@ -25,7 +25,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 
-namespace thZero.AspNetCore.DependencyInjection
+namespace thZero.DependencyInjection
 {
 	public static class IServiceCollectionExtensions
 	{

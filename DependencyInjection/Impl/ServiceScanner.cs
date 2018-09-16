@@ -26,7 +26,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using thZero.Services;
 
-namespace thZero.AspNetCore.DependencyInjection
+namespace thZero.DependencyInjection
 {
 	public class ServiceScanner : IService
 	{
