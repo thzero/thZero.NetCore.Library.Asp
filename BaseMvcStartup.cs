@@ -82,8 +82,17 @@ namespace thZero.AspNetCore
 
             ConfigureInitialize(app, env, loggerFactory, svp);
 
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.InitializeStaticPre(app, env, svp));
+
             ConfigureInitializeStaticPre(app, env, svp);
+
             ConfigureInitializeStatic(app, env, svp);
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.InitializeStaticPost(app, env, svp));
+
             ConfigureInitializeStaticPost(app, env, svp);
 
             var defaultCultureName = "en";
@@ -112,9 +121,15 @@ namespace thZero.AspNetCore
 
 			app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
-			ConfigureInitializeRoutes(app);
+            ConfigureInitializeRoutes(app);
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.InitializeFinalPre(app, env, loggerFactory, svp));
 
             ConfigureInitializeFinal(app, env, loggerFactory, svp);
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.InitializeFinalPost(app, env, loggerFactory, svp));
         }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
@@ -194,8 +209,14 @@ namespace thZero.AspNetCore
 		{
 			app.UseMvc(routes =>
 			{
-				ConfigureInitializeRoutesBuilder(routes);
-			});
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.InitializeRoutesBuilderPre(routes));
+
+                ConfigureInitializeRoutesBuilder(routes);
+
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.InitializeRoutesBuilderPost(routes));
+            });
 		}
 
 		protected virtual void ConfigureInitializeRoutesBuilder(IRouteBuilder routes)
@@ -223,18 +244,10 @@ namespace thZero.AspNetCore
 
         protected virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
-            if (StartupExtensions == null)
-                return;
-
-            StartupExtensions.ToList().ForEach(l => l.InitializeStaticPost(app));
         }
 
         protected virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
-            if (StartupExtensions == null)
-                return;
-
-            StartupExtensions.ToList().ForEach(l => l.InitializeStaticPre(app));
         }
 
         protected virtual void ConfigureServicesInitializeBuilder(IHostingEnvironment env, ConfigurationBuilder builder)

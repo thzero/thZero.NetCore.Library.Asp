@@ -20,17 +20,24 @@ limitations under the License.
 using System;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace thZero.AspNetCore
 {
     public interface IStartupExtension
     {
+        void InitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
+        void InitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
         void InitializeMvcPost(IServiceCollection services, IConfigurationRoot configuration);
         void InitializeMvcPre(IServiceCollection services, IConfigurationRoot configuration);
+        void InitializeRoutesBuilderPost(IRouteBuilder routes);
+        void InitializeRoutesBuilderPre(IRouteBuilder routes);
         void InitializeSsl(IApplicationBuilder app);
-        void InitializeStaticPost(IApplicationBuilder app);
-        void InitializeStaticPre(IApplicationBuilder app);
+        void InitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
+        void InitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
     }
 }
