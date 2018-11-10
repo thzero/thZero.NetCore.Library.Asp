@@ -73,25 +73,30 @@ namespace thZero.AspNetCore
             if (RequiresSsl)
             {
                 if (StartupExtensions != null)
-                    StartupExtensions.ToList().ForEach(l => l.InitializeSsl(app));
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeSsl(app));
 
                 ConfigureInitializeSsl(app, env);
             }
 
             _useCompression = ConfigureInitializeCompression(app, env);
 
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializePre(app, env, svp));
+
             ConfigureInitialize(app, env, loggerFactory, svp);
 
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializePost(app, env, svp));
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.InitializeStaticPre(app, env, svp));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeStaticPre(app, env, svp));
 
             ConfigureInitializeStaticPre(app, env, svp);
 
             ConfigureInitializeStatic(app, env, svp);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.InitializeStaticPost(app, env, svp));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeStaticPost(app, env, svp));
 
             ConfigureInitializeStaticPost(app, env, svp);
 
@@ -124,12 +129,12 @@ namespace thZero.AspNetCore
             ConfigureInitializeRoutes(app);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.InitializeFinalPre(app, env, loggerFactory, svp));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeFinalPre(app, env, loggerFactory, svp));
 
             ConfigureInitializeFinal(app, env, loggerFactory, svp);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.InitializeFinalPost(app, env, loggerFactory, svp));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeFinalPost(app, env, loggerFactory, svp));
         }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
@@ -155,14 +160,14 @@ namespace thZero.AspNetCore
             ConfigureServicesInitializeMvcPre(services);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.InitializeMvcPre(services, Configuration));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesMvcPre(services, Configuration));
 
 			services.AddMvc();
 
             ConfigureServicesInitializeMvcAntiforgery(services);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.InitializeMvcPost(services, Configuration));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesMvcPost(services, Configuration));
 
             ConfigureServicesInitializeMvcPost(services);
 
@@ -210,12 +215,12 @@ namespace thZero.AspNetCore
 			app.UseMvc(routes =>
 			{
                 if (StartupExtensions != null)
-                    StartupExtensions.ToList().ForEach(l => l.InitializeRoutesBuilderPre(routes));
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeRoutesBuilderPre(routes));
 
                 ConfigureInitializeRoutesBuilder(routes);
 
                 if (StartupExtensions != null)
-                    StartupExtensions.ToList().ForEach(l => l.InitializeRoutesBuilderPost(routes));
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeRoutesBuilderPost(routes));
             });
 		}
 

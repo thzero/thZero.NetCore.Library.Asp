@@ -27,7 +27,7 @@ using Microsoft.Extensions.DependencyModel;
 
 namespace thZero.DependencyInjection
 {
-	public static class IServiceCollectionExtensions
+	public static class ServiceCollectionExtensions
 	{
 		#region Public Methods
 		public static IServiceCollection ScanForDependencies(this IServiceCollection services)
