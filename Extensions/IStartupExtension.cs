@@ -30,8 +30,10 @@ namespace thZero.AspNetCore
 {
     public interface IStartupExtension
     {
-        void ConfigureInitializePost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
-        void ConfigureInitializePre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
+        void ConfigurePost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
+        void ConfigurePre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
+        void ConfigureInitializePost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
+        void ConfigureInitializePre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
         void ConfigureInitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
         void ConfigureInitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
         void ConfigureInitializeRoutesBuilderPost(IRouteBuilder routes);
@@ -39,7 +41,9 @@ namespace thZero.AspNetCore
         void ConfigureInitializeSsl(IApplicationBuilder app);
         void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
         void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
-        void ConfigureServicesMvcPost(IServiceCollection services, IConfigurationRoot configuration);
-        void ConfigureServicesMvcPre(IServiceCollection services, IConfigurationRoot configuration);
+        void ConfigureServicesPost(IServiceCollection services, IConfigurationRoot configuration);
+        void ConfigureServicesPre(IServiceCollection services, IConfigurationRoot configuration);
+        void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfigurationRoot configuration);
+        void ConfigureServicesInitializeMvcPre(IServiceCollection services, IConfigurationRoot configuration);
     }
 }

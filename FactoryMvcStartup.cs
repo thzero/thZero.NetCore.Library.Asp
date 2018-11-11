@@ -29,7 +29,8 @@ using thZero.Services;
 
 namespace thZero.AspNetCore
 {
-	public abstract class FactoryMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail> :
+    [Obsolete("FactoryMvcStartup is deprecated, please use FactoryStartupExtension instead.")]
+    public abstract class FactoryMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail> :
 		ConfigurableMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail>
 		where TApplicationConfiguration : Application<TApplicationConfigurationDefaults, TApplicationConfigurationEmail>, new()
 		where TApplicationConfigurationDefaults : ApplicationDefaults
@@ -53,15 +54,15 @@ namespace thZero.AspNetCore
 		{
 			base.ConfigureInitialize(app, env, loggerFactory, svp);
 
-            ConfigureInitializeServicesFactoryLoggerFactory(svp, loggerFactory);
-            ConfigureInitializeServicesFactory(svp);
+            ConfigureInitializeFactoryLoggerFactory(svp, loggerFactory);
+            ConfigureInitializeFactory(svp);
         }
 
-        protected virtual void ConfigureInitializeServicesFactory(IServiceProvider svp)
+        protected virtual void ConfigureInitializeFactory(IServiceProvider svp)
         {
         }
 
-        protected virtual void ConfigureInitializeServicesFactoryLoggerFactory(IServiceProvider svp, ILoggerFactory loggerFactory)
+        protected virtual void ConfigureInitializeFactoryLoggerFactory(IServiceProvider svp, ILoggerFactory loggerFactory)
         {
             Factory.Instance.AddSingleton<ILoggerFactory>(loggerFactory);
         }

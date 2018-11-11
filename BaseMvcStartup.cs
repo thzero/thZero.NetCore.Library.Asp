@@ -70,6 +70,9 @@ namespace thZero.AspNetCore
             ConfigureInitializeServiceProvider(svp);
             ConfigureInitializeLoggerFactory(loggerFactory);
 
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigurePre(app, env, loggerFactory, svp));
+
             if (RequiresSsl)
             {
                 if (StartupExtensions != null)
@@ -81,12 +84,12 @@ namespace thZero.AspNetCore
             _useCompression = ConfigureInitializeCompression(app, env);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializePre(app, env, svp));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializePre(app, env, loggerFactory, svp));
 
             ConfigureInitialize(app, env, loggerFactory, svp);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializePost(app, env, svp));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializePost(app, env, loggerFactory, svp));
 
             if (StartupExtensions != null)
                 StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeStaticPre(app, env, svp));
@@ -135,39 +138,45 @@ namespace thZero.AspNetCore
 
             if (StartupExtensions != null)
                 StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeFinalPost(app, env, loggerFactory, svp));
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigurePost(app, env, loggerFactory, svp));
         }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		// This gets called before Configure.
 		// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup
 		public virtual void ConfigureServices(IServiceCollection services)
-		{
-			ServiceDescriptor envDescriptor = services.Where(l => l.ServiceType.Equals(typeof(IHostingEnvironment))).FirstOrDefault();
+        {
+            RegisterStartupExtensions();
+
+            ServiceDescriptor envDescriptor = services.Where(l => l.ServiceType.Equals(typeof(IHostingEnvironment))).FirstOrDefault();
 			Enforce.AgainstNull(() => envDescriptor);
 
 			IHostingEnvironment env = (IHostingEnvironment)envDescriptor.ImplementationInstance;
 
-			// Doing some initialization and the ConfigurationBuilder here so that
-			// we do not have virtual methods in the constructor.
-			ConfigurationBuilder builder = new ConfigurationBuilder();
+            // Doing some initialization and the ConfigurationBuilder here so that
+            // we do not have virtual methods in the constructor.
+            ConfigurationBuilder builder = new ConfigurationBuilder();
             ConfigureServicesInitializeBuilder(env, builder);
-			Configuration = builder.Build();
+            Configuration = builder.Build();
 
-            RegisterStartupExtensions();
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesPre(services, Configuration));
 
             services.AddSingleton<IServiceVersionInformation, ServiceVersionInformation>();
 
             ConfigureServicesInitializeMvcPre(services);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesMvcPre(services, Configuration));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcPre(services, Configuration));
 
 			services.AddMvc();
 
             ConfigureServicesInitializeMvcAntiforgery(services);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesMvcPost(services, Configuration));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcPost(services, Configuration));
 
             ConfigureServicesInitializeMvcPost(services);
 
@@ -176,8 +185,11 @@ namespace thZero.AspNetCore
 			{
 				ConfigureServicesInitializeCompression(services);
 				ConfigureServicesInitializeCompressionOptions(services);
-			}
-		}
+            }
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesPost(services, Configuration));
+        }
 		#endregion
 
 		#region Protected Methods
