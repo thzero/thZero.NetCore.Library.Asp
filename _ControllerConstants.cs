@@ -21,11 +21,16 @@ using System;
 
 namespace thZero.Constants.Controller
 {
-	public static class Action
+    public static class Action
 	{
 		public const string Blank = "Blank";
 		public const string Index = "Index";
 	}
+
+    public static class Home
+    {
+        public const string Controller = "Home";
+    }
 }
 
 namespace thZero.Constants.View
