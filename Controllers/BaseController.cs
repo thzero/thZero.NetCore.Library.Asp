@@ -33,7 +33,7 @@ namespace thZero.AspNetCore.Mvc
 			return Request.IsAjaxRequest();
 		}
 
-		public bool Validate(params bool[] values)
+        protected bool Validate(params bool[] values)
 		{
 			if (values == null)
 				return false;

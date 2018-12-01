@@ -119,17 +119,17 @@ namespace thZero.AspNetCore.Mvc
 			return new JsonResultEx(new JsonOutputResponseViewModel<T>() { Success = true, Data = data });
 		}
 
-		public virtual JsonResult JsonGetFailure(string message)
+        protected virtual JsonResult JsonGetFailure(string message)
 		{
 			return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddError(message));
 		}
 
-		public virtual JsonResult JsonGetFailure()
+        protected virtual JsonResult JsonGetFailure()
 		{
 			return new JsonResultEx(new JsonOutputErrorResponseViewModel());
 		}
 
-		public virtual JsonResult JsonGetSelect(IEnumerable<SelectListItem> list)
+        protected virtual JsonResult JsonGetSelect(IEnumerable<SelectListItem> list)
 		{
 			return new JsonResultEx(new JsonOutputSearchResponseViewModel<SelectListItem>() { Success = true, Data = list });
 		}
@@ -150,28 +150,28 @@ namespace thZero.AspNetCore.Mvc
 			return new JsonResultEx(new JsonOutputResponseViewModel<T>() { Success = true, Data = data });
 		}
 
-		public virtual JsonResult JsonPostFailure()
+        protected virtual JsonResult JsonPostFailure()
 		{
 			return new JsonResultEx(new JsonOutputErrorResponseViewModel());
 		}
 
-		public virtual JsonResult JsonPostFailure(IEnumerable<string> errors)
+        protected virtual JsonResult JsonPostFailure(IEnumerable<string> errors)
 		{
 			return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddErrors(errors));
 		}
 
-		public virtual JsonResult JsonPostFailure(string message)
+        protected virtual JsonResult JsonPostFailure(string message)
 		{
 			return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddError(message));
 		}
 
-		public virtual JsonResult JsonPostFailure<T>(T data)
+        protected virtual JsonResult JsonPostFailure<T>(T data)
 			where T : class
 		{
 			return new JsonResultEx(new JsonOutputResponseViewModel<T>() { Success = false, Data = data });
 		}
 
-		public virtual JsonResult JsonPostFailure<T>(T data, string message)
+        protected virtual JsonResult JsonPostFailure<T>(T data, string message)
 			where T : class
 		{
 			return new JsonResultEx((new JsonOutputResponseViewModel<T>() { Success = false, Data = data }).AddError(message));

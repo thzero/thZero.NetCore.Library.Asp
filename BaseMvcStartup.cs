@@ -52,17 +52,12 @@ namespace thZero.AspNetCore
 		// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup
 		public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
 		{
-#if NETSTANDARD2_0
 			Utilities.Services.Version.Instance.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
 
             IServiceVersionInformation serviceVersionInformation = svp.GetService<IServiceVersionInformation>();
             serviceVersionInformation.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
-#else
-			var version = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion;
-			Utilities.Services.Web.Version.Instance.Version = new Version(version);
-#endif
 
-            Utilities.Services.Web.ServiceProvider.Instance = svp;
+            Utilities.ServiceProvider.Instance = svp;
 			Utilities.Web.Environment.IsDevelopment = env.IsDevelopment();
 			Utilities.Web.Environment.IsProduction = env.IsProduction();
 			Utilities.Web.Environment.IsStaging = env.IsStaging();

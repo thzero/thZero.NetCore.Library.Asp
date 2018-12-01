@@ -188,11 +188,4 @@ namespace thZero.Utilities.Services.Web
 		public static IServiceDataFormat Instance => Factory.Instance.Retrieve<IServiceDataFormat>();
 		#endregion
 	}
-
-	public static class ServiceProvider
-	{
-		#region Public Properties
-		public static IServiceProvider Instance { get; set; }
-		#endregion
-	}
 }

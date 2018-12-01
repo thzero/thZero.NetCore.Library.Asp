@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
 		<AssemblyName>thZero.NetCore.Library.Asp</AssemblyName>
 		<PackageId>thZero.NetCore.Library.Asp</PackageId>
     <Description></Description>
@@ -37,7 +37,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.1" />
 		<PackageReference Include="System.Runtime.Serialization.Json" Version="4.3.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
 	</ItemGroup>
 	
 	<ItemGroup>
