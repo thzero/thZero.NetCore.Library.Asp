@@ -21,6 +21,7 @@ using System;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,6 +44,12 @@ namespace thZero.AspNetCore
         void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
         void ConfigureServicesPost(IServiceCollection services, IConfigurationRoot configuration);
         void ConfigureServicesPre(IServiceCollection services, IConfigurationRoot configuration);
+        void ConfigureServicesInitializeMvcBuilderPost(IMvcBuilder options);
+        void ConfigureServicesInitializeMvcBuilderPre(IMvcBuilder options);
+        void ConfigureServicesInitializeMvcBuilderPost(IMvcCoreBuilder options);
+        void ConfigureServicesInitializeMvcBuilderPre(IMvcCoreBuilder options);
+        void ConfigureServicesInitializeMvcOptionsPost(MvcOptions options);
+        void ConfigureServicesInitializeMvcOptionsPre(MvcOptions options);
         void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfigurationRoot configuration);
         void ConfigureServicesInitializeMvcPre(IServiceCollection services, IConfigurationRoot configuration);
     }

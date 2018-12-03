@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 #if !DEBUG
 using Microsoft.AspNetCore.Rewrite;
@@ -166,7 +167,48 @@ namespace thZero.AspNetCore
             if (StartupExtensions != null)
                 StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcPre(services, Configuration));
 
-			services.AddMvc();
+            if (MvcType == MvcTypes.Core)
+            {
+                IMvcCoreBuilder mvcBuilder = services.AddMvcCore(options =>
+                {
+                    if (StartupExtensions != null)
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcOptionsPre(options));
+
+                    ConfigureServicesInitializeMvcOptions(options);
+
+                    if (StartupExtensions != null)
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcOptionsPost(options));
+                });
+
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
+
+                ConfigureServicesInitializeMvcBuilder(mvcBuilder);
+
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPost(mvcBuilder));
+            }
+            else
+            {
+                IMvcBuilder mvcBuilder = services.AddMvc(options =>
+                {
+                    if (StartupExtensions != null)
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcOptionsPre(options));
+
+                    ConfigureServicesInitializeMvcOptions(options);
+
+                    if (StartupExtensions != null)
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcOptionsPost(options));
+                });
+
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
+
+                ConfigureServicesInitializeMvcBuilder(mvcBuilder);
+
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPost(mvcBuilder));
+            }
 
             ConfigureServicesInitializeMvcAntiforgery(services);
 
@@ -267,6 +309,18 @@ namespace thZero.AspNetCore
             builder.SetBasePath(env.ContentRootPath);
         }
 
+        protected virtual void ConfigureServicesInitializeMvcBuilder(IMvcCoreBuilder options)
+        {
+        }
+
+        protected virtual void ConfigureServicesInitializeMvcBuilder(IMvcBuilder builder)
+        {
+        }
+
+        protected virtual void ConfigureServicesInitializeMvcOptions(MvcOptions options)
+        {
+        }
+
         protected virtual void ConfigureServicesInitializeMvcAntiforgery(IServiceCollection services)
         {
             string antiforgeryTokenName = ConfigureServicesInitializeMvcAntiforgeryTokenGenerate();
@@ -330,6 +384,7 @@ namespace thZero.AspNetCore
         #region Protected Properties
         protected IConfigurationRoot Configuration { get; set; }
         protected virtual string Localization { get { return KeyLocalization; } }
+        protected MvcTypes MvcType { get; } = MvcTypes.Default;
         protected abstract bool RequiresSsl { get; }
         protected static IServiceCollection ServiceCollection { get; private set; }
         protected ICollection<IStartupExtension> StartupExtensions { get; } = new List<IStartupExtension>();
@@ -342,5 +397,11 @@ namespace thZero.AspNetCore
         #region Constants
         protected const string KeyLocalization = "Resources";
         #endregion
+    }
+
+    public enum MvcTypes
+    {
+        Core,
+        Default
     }
 }

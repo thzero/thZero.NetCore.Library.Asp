@@ -21,6 +21,7 @@ using System;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -86,6 +87,30 @@ namespace thZero.AspNetCore
         public virtual void ConfigureServicesPre(IServiceCollection services, IConfigurationRoot configuration)
         {
             InitializeFactory();
+        }
+
+        public virtual void ConfigureServicesInitializeMvcBuilderPost(IMvcBuilder builder)
+        {
+        }
+
+        public virtual void ConfigureServicesInitializeMvcBuilderPre(IMvcBuilder builder)
+        {
+        }
+
+        public virtual void ConfigureServicesInitializeMvcBuilderPost(IMvcCoreBuilder builder)
+        {
+        }
+
+        public virtual void ConfigureServicesInitializeMvcBuilderPre(IMvcCoreBuilder builder)
+        {
+        }
+
+        public virtual void ConfigureServicesInitializeMvcOptionsPost(MvcOptions options)
+        {
+        }
+
+        public virtual void ConfigureServicesInitializeMvcOptionsPre(MvcOptions options)
+        {
         }
 
         public virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfigurationRoot configuration)
