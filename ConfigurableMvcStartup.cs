@@ -19,21 +19,23 @@ limitations under the License.
 
 using System;
 
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 using thZero.Configuration;
 
 namespace thZero.AspNetCore
 {
-	public abstract class ConfigurableMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail> : 
-		BaseMvcStartup
-		where TApplicationConfiguration : Application<TApplicationConfigurationDefaults, TApplicationConfigurationEmail>, new()
+	public abstract class ConfigurableMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail, TStartup> :
+        LoggableMvcStartup<TStartup>
+        where TApplicationConfiguration : Application<TApplicationConfigurationDefaults, TApplicationConfigurationEmail>, new()
 		where TApplicationConfigurationDefaults : ApplicationDefaults
 		where TApplicationConfigurationEmail : ApplicationEmail
-	{
-		public ConfigurableMvcStartup(IHostingEnvironment env, string copyrightDate) : base(env)
+        where TStartup : BaseMvcStartup
+    {
+		public ConfigurableMvcStartup(string copyrightDate, IConfiguration configuration, ILogger<TStartup> logger) : base(configuration, logger)
 		{
 			Utilities.Web.General.CopyrightDate = copyrightDate;
 		}

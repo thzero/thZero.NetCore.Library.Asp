@@ -23,6 +23,7 @@ using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace thZero.AspNetCore
 {
@@ -47,6 +48,15 @@ namespace thZero.AspNetCore
 
 			var webHostBuilder = new WebHostBuilder()
 					.UseConfiguration(configuration)
+                    .ConfigureAppConfiguration((hostingContext, configurationBuilder) =>
+                    {
+                        configurationBuilder.SetBasePath(hostingContext.HostingEnvironment.ContentRootPath);
+                        InitializeConfigurationBuilder(hostingContext, configurationBuilder);
+                    })
+                    .ConfigureLogging((hostingContext, loggingBuilder) =>
+                    {
+                        InitializeConfigureLoggingBuilder(hostingContext, loggingBuilder);
+                    })
 					.UseStartup<TStartup>();
 
 			webHostBuilder.UseKestrel(c => c.AddServerHeader = false);
@@ -64,9 +74,17 @@ namespace thZero.AspNetCore
 		protected virtual IConfigurationBuilder InitializeConfigurationBuilder(IConfigurationBuilder builder)
 		{
 			return builder;
-		}
+        }
 
-		protected virtual IWebHostBuilder InitializeWebHostBuilder(IWebHostBuilder builder)
+        protected virtual void InitializeConfigurationBuilder(WebHostBuilderContext hostingContext, IConfigurationBuilder configurationBuilder)
+        {
+        }
+
+        protected virtual void InitializeConfigureLoggingBuilder(WebHostBuilderContext hostingContext, ILoggingBuilder loggingBuilder)
+        {
+        }
+
+        protected virtual IWebHostBuilder InitializeWebHostBuilder(IWebHostBuilder builder)
 		{
 			return builder;
 		}

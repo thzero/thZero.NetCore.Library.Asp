@@ -34,11 +34,11 @@ namespace thZero.AspNetCore
     public class FactoryStartupExtension : IStartupExtension
     {
         #region Public Methods
-        public virtual void ConfigurePost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public virtual void ConfigurePost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
         }
 
-        public virtual void ConfigurePre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public virtual void ConfigurePre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
         }
 
@@ -52,11 +52,11 @@ namespace thZero.AspNetCore
             ConfigureInitializeFactory(svp);
         }
 
-        public virtual void ConfigureInitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public virtual void ConfigureInitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
         }
 
-        public virtual void ConfigureInitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public virtual void ConfigureInitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
         }
 
@@ -80,11 +80,11 @@ namespace thZero.AspNetCore
         {
         }
 
-        public virtual void ConfigureServicesPost(IServiceCollection services, IConfigurationRoot configuration)
+        public virtual void ConfigureServicesPost(IServiceCollection services, IConfiguration configuration)
         {
         }
 
-        public virtual void ConfigureServicesPre(IServiceCollection services, IConfigurationRoot configuration)
+        public virtual void ConfigureServicesPre(IServiceCollection services, IConfiguration configuration)
         {
             InitializeFactory();
         }
@@ -113,14 +113,14 @@ namespace thZero.AspNetCore
         {
         }
 
-        public virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfigurationRoot configuration)
+        public virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfiguration configuration)
         {
             Factory.Instance.AddSingleton<IServiceVersionInformation, ServiceVersionInformation>();
 
             ConfigureServicesInitializeFactory(services);
         }
 
-        public virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services, IConfigurationRoot configuration)
+        public virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services, IConfiguration configuration)
         {
         }
         #endregion

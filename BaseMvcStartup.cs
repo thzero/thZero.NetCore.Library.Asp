@@ -41,17 +41,25 @@ using thZero.Services;
 
 namespace thZero.AspNetCore
 {
-	public abstract class BaseMvcStartup
+    public abstract class BaseMvcStartup
     {
-		protected BaseMvcStartup(IHostingEnvironment env)
-		{
-		}
+    }
 
-		#region Public Methods
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		// This gets called after ConfigureServices.
-		// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup
-		public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+    public abstract class LoggableMvcStartup<TStartup> : BaseMvcStartup
+        where TStartup : BaseMvcStartup
+    {
+		protected LoggableMvcStartup(IConfiguration configuration, ILogger<TStartup> logger)
+		{
+            Configuration = configuration;
+            Logger = logger;
+
+        }
+
+        #region Public Methods
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // This gets called after ConfigureServices.
+        // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup
+        public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
 		{
 			Utilities.Services.Version.Instance.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
 
@@ -64,10 +72,9 @@ namespace thZero.AspNetCore
 			Utilities.Web.Environment.IsStaging = env.IsStaging();
 
             ConfigureInitializeServiceProvider(svp);
-            ConfigureInitializeLoggerFactory(loggerFactory);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigurePre(app, env, loggerFactory, svp));
+                StartupExtensions.ToList().ForEach(l => l.ConfigurePre(app, env, svp));
 
             if (RequiresSsl)
             {
@@ -128,15 +135,15 @@ namespace thZero.AspNetCore
             ConfigureInitializeRoutes(app);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeFinalPre(app, env, loggerFactory, svp));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeFinalPre(app, env, svp));
 
-            ConfigureInitializeFinal(app, env, loggerFactory, svp);
-
-            if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeFinalPost(app, env, loggerFactory, svp));
+            ConfigureInitializeFinal(app, env, svp);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigurePost(app, env, loggerFactory, svp));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeFinalPost(app, env, svp));
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigurePost(app, env, svp));
         }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
@@ -150,12 +157,6 @@ namespace thZero.AspNetCore
 			Enforce.AgainstNull(() => envDescriptor);
 
 			IHostingEnvironment env = (IHostingEnvironment)envDescriptor.ImplementationInstance;
-
-            // Doing some initialization and the ConfigurationBuilder here so that
-            // we do not have virtual methods in the constructor.
-            ConfigurationBuilder builder = new ConfigurationBuilder();
-            ConfigureServicesInitializeBuilder(env, builder);
-            Configuration = builder.Build();
 
             if (StartupExtensions != null)
                 StartupExtensions.ToList().ForEach(l => l.ConfigureServicesPre(services, Configuration));
@@ -178,7 +179,8 @@ namespace thZero.AspNetCore
 
                     if (StartupExtensions != null)
                         StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcOptionsPost(options));
-                });
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
                 if (StartupExtensions != null)
                     StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
@@ -199,7 +201,8 @@ namespace thZero.AspNetCore
 
                     if (StartupExtensions != null)
                         StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcOptionsPost(options));
-                });
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
                 if (StartupExtensions != null)
                     StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
@@ -233,9 +236,9 @@ namespace thZero.AspNetCore
 		protected virtual void ConfigureInitialize(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
 		{
 			if (env.IsDevelopment())
-				ConfigureInitializeDebug(app, env, loggerFactory, svp);
+				ConfigureInitializeDebug(app, env, svp);
 			else
-				ConfigureInitializeProduction(app, env, loggerFactory, svp);
+				ConfigureInitializeProduction(app, env, svp);
         }
 
         protected virtual bool ConfigureInitializeCompression(IApplicationBuilder app, IHostingEnvironment env)
@@ -244,20 +247,16 @@ namespace thZero.AspNetCore
             return true;
         }
 
-        protected virtual void ConfigureInitializeDebug(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        protected virtual void ConfigureInitializeDebug(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
 		{
 			app.UseDeveloperExceptionPage();
         }
 
-        protected virtual void ConfigureInitializeFinal(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        protected virtual void ConfigureInitializeFinal(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
         }
 
-        protected virtual void ConfigureInitializeLoggerFactory(ILoggerFactory loggerFactory)
-        {
-        }
-
-        protected abstract void ConfigureInitializeProduction(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
+        protected abstract void ConfigureInitializeProduction(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
 
 		protected virtual void ConfigureInitializeRoutes(IApplicationBuilder app)
 		{
@@ -284,11 +283,15 @@ namespace thZero.AspNetCore
         protected virtual void ConfigureInitializeSsl(IApplicationBuilder app, IHostingEnvironment env)
         {
 #if !DEBUG
-            var options = new RewriteOptions()
-                //.AddRedirectToHttps();
-                .AddRedirectToHttpsPermanent();
+            //var options = new RewriteOptions()
+            //    //.AddRedirectToHttps();
+            //    .AddRedirectToHttpsPermanent();
 
-            app.UseRewriter(options);
+            //app.UseRewriter(options);
+
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+            app.UseHttpsRedirection();
 #endif
         }
 
@@ -302,11 +305,6 @@ namespace thZero.AspNetCore
 
         protected virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
         {
-        }
-
-        protected virtual void ConfigureServicesInitializeBuilder(IHostingEnvironment env, ConfigurationBuilder builder)
-        {
-            builder.SetBasePath(env.ContentRootPath);
         }
 
         protected virtual void ConfigureServicesInitializeMvcBuilder(IMvcCoreBuilder options)
@@ -382,8 +380,9 @@ namespace thZero.AspNetCore
         #endregion
 
         #region Protected Properties
-        protected IConfigurationRoot Configuration { get; set; }
+        protected IConfiguration Configuration { get; set; }
         protected virtual string Localization { get { return KeyLocalization; } }
+        protected ILogger<TStartup> Logger { get; private set; }
         protected MvcTypes MvcType { get; } = MvcTypes.Default;
         protected abstract bool RequiresSsl { get; }
         protected static IServiceCollection ServiceCollection { get; private set; }

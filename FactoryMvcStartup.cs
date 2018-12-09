@@ -20,6 +20,7 @@ limitations under the License.
 using System;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,14 +31,15 @@ using thZero.Services;
 namespace thZero.AspNetCore
 {
     [Obsolete("FactoryMvcStartup is deprecated, please use FactoryStartupExtension instead.")]
-    public abstract class FactoryMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail> :
-		ConfigurableMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail>
-		where TApplicationConfiguration : Application<TApplicationConfigurationDefaults, TApplicationConfigurationEmail>, new()
+    public abstract class FactoryMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail, TStartup> :
+		ConfigurableMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail, TStartup>
+        where TApplicationConfiguration : Application<TApplicationConfigurationDefaults, TApplicationConfigurationEmail>, new()
 		where TApplicationConfigurationDefaults : ApplicationDefaults
 		where TApplicationConfigurationEmail : ApplicationEmail
-	{
-		public FactoryMvcStartup(IHostingEnvironment env, string copyrightDate) : base(env, copyrightDate)
-		{
+        where TStartup : BaseMvcStartup
+    {
+		public FactoryMvcStartup(string copyrightDate, IConfiguration configuration, ILogger<TStartup> logger) : base(copyrightDate, configuration, logger)
+        {
 		}
 
 		#region Public Methods

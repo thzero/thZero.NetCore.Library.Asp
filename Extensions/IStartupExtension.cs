@@ -31,26 +31,26 @@ namespace thZero.AspNetCore
 {
     public interface IStartupExtension
     {
-        void ConfigurePost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
-        void ConfigurePre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
+        void ConfigurePost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
+        void ConfigurePre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
         void ConfigureInitializePost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
         void ConfigureInitializePre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
-        void ConfigureInitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
-        void ConfigureInitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
+        void ConfigureInitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
+        void ConfigureInitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
         void ConfigureInitializeRoutesBuilderPost(IRouteBuilder routes);
         void ConfigureInitializeRoutesBuilderPre(IRouteBuilder routes);
         void ConfigureInitializeSsl(IApplicationBuilder app);
         void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
         void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
-        void ConfigureServicesPost(IServiceCollection services, IConfigurationRoot configuration);
-        void ConfigureServicesPre(IServiceCollection services, IConfigurationRoot configuration);
+        void ConfigureServicesPost(IServiceCollection services, IConfiguration configuration);
+        void ConfigureServicesPre(IServiceCollection services, IConfiguration configuration);
         void ConfigureServicesInitializeMvcBuilderPost(IMvcBuilder options);
         void ConfigureServicesInitializeMvcBuilderPre(IMvcBuilder options);
         void ConfigureServicesInitializeMvcBuilderPost(IMvcCoreBuilder options);
         void ConfigureServicesInitializeMvcBuilderPre(IMvcCoreBuilder options);
         void ConfigureServicesInitializeMvcOptionsPost(MvcOptions options);
         void ConfigureServicesInitializeMvcOptionsPre(MvcOptions options);
-        void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfigurationRoot configuration);
-        void ConfigureServicesInitializeMvcPre(IServiceCollection services, IConfigurationRoot configuration);
+        void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfiguration configuration);
+        void ConfigureServicesInitializeMvcPre(IServiceCollection services, IConfiguration configuration);
     }
 }
