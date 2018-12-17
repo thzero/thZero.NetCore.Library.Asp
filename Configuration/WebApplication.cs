@@ -59,7 +59,7 @@ namespace thZero.Configuration
     {
         #region Public Properties
         public string Key { get; set; }
-        public string Server { get; set; }
+        public string Secret { get; set; }
         #endregion
     }
 }
