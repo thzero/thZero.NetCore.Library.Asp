@@ -21,8 +21,6 @@ using System;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -31,97 +29,31 @@ using thZero.Services;
 
 namespace thZero.AspNetCore
 {
-    public class FactoryStartupExtension : IStartupExtension
+    public class FactoryStartupExtension : BaseStartupExtension
     {
         #region Public Methods
-        public virtual void ConfigurePost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        public override void ConfigureInitializePre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
-        }
+            base.ConfigureInitializePre(app, env, loggerFactory, svp);
 
-        public virtual void ConfigurePre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
-        {
-        }
-
-        public void ConfigureInitializePost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
-        {
-        }
-
-        public void ConfigureInitializePre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
-        {
             ConfigureInitializeFactoryLoggerFactory(svp, loggerFactory);
             ConfigureInitializeFactory(svp);
         }
 
-        public virtual void ConfigureInitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        public override void ConfigureServicesPre(IServiceCollection services, IConfiguration configuration)
         {
-        }
+            base.ConfigureServicesPre(services, configuration);
 
-        public virtual void ConfigureInitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
-        {
-        }
-
-        public virtual void ConfigureInitializeRoutesBuilderPost(IRouteBuilder routes)
-        {
-        }
-
-        public virtual void ConfigureInitializeRoutesBuilderPre(IRouteBuilder routes)
-        {
-        }
-
-        public virtual void ConfigureInitializeSsl(IApplicationBuilder app)
-        {
-        }
-
-        public virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
-        {
-        }
-
-        public virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
-        {
-        }
-
-        public virtual void ConfigureServicesPost(IServiceCollection services, IConfiguration configuration)
-        {
-        }
-
-        public virtual void ConfigureServicesPre(IServiceCollection services, IConfiguration configuration)
-        {
             InitializeFactory();
         }
 
-        public virtual void ConfigureServicesInitializeMvcBuilderPost(IMvcBuilder builder)
+        public override void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfiguration configuration)
         {
-        }
+            base.ConfigureServicesInitializeMvcPost(services, configuration);
 
-        public virtual void ConfigureServicesInitializeMvcBuilderPre(IMvcBuilder builder)
-        {
-        }
-
-        public virtual void ConfigureServicesInitializeMvcBuilderPost(IMvcCoreBuilder builder)
-        {
-        }
-
-        public virtual void ConfigureServicesInitializeMvcBuilderPre(IMvcCoreBuilder builder)
-        {
-        }
-
-        public virtual void ConfigureServicesInitializeMvcOptionsPost(MvcOptions options)
-        {
-        }
-
-        public virtual void ConfigureServicesInitializeMvcOptionsPre(MvcOptions options)
-        {
-        }
-
-        public virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfiguration configuration)
-        {
             Factory.Instance.AddSingleton<IServiceVersionInformation, ServiceVersionInformation>();
 
             ConfigureServicesInitializeFactory(services);
-        }
-
-        public virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services, IConfiguration configuration)
-        {
         }
         #endregion
 

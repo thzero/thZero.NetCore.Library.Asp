@@ -374,6 +374,12 @@ namespace thZero.AspNetCore
             StartupExtensions.Add(extension);
         }
 
+        protected virtual void RegisterStartupExtension<TStartupExtension>()
+            where TStartupExtension : IStartupExtension
+        {
+            StartupExtensions.Add(Utilities.Activator.CreateInstance<TStartupExtension>());
+        }
+
         protected virtual void RegisterStartupExtensions()
         {
         }
