@@ -40,16 +40,16 @@ namespace thZero.AspNetCore
             ConfigureInitializeFactory(svp);
         }
 
-        public override void ConfigureServicesPre(IServiceCollection services, IConfiguration configuration)
+        public override void ConfigureServicesPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
         {
-            base.ConfigureServicesPre(services, configuration);
+            base.ConfigureServicesPre(services, env, configuration);
 
             InitializeFactory();
         }
 
-        public override void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfiguration configuration)
+        public override void ConfigureServicesInitializeMvcPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
         {
-            base.ConfigureServicesInitializeMvcPost(services, configuration);
+            base.ConfigureServicesInitializeMvcPost(services, env, configuration);
 
             Factory.Instance.AddSingleton<IServiceVersionInformation, ServiceVersionInformation>();
 

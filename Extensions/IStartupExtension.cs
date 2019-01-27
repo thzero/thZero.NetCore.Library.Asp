@@ -42,15 +42,15 @@ namespace thZero.AspNetCore
         void ConfigureInitializeSsl(IApplicationBuilder app);
         void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
         void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
-        void ConfigureServicesPost(IServiceCollection services, IConfiguration configuration);
-        void ConfigureServicesPre(IServiceCollection services, IConfiguration configuration);
+        void ConfigureServicesPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
+        void ConfigureServicesPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
         void ConfigureServicesInitializeMvcBuilderPost(IMvcBuilder options);
         void ConfigureServicesInitializeMvcBuilderPre(IMvcBuilder options);
         void ConfigureServicesInitializeMvcBuilderPost(IMvcCoreBuilder options);
         void ConfigureServicesInitializeMvcBuilderPre(IMvcCoreBuilder options);
         void ConfigureServicesInitializeMvcOptionsPost(MvcOptions options);
         void ConfigureServicesInitializeMvcOptionsPre(MvcOptions options);
-        void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfiguration configuration);
-        void ConfigureServicesInitializeMvcPre(IServiceCollection services, IConfiguration configuration);
+        void ConfigureServicesInitializeMvcPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
+        void ConfigureServicesInitializeMvcPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
     }
 }

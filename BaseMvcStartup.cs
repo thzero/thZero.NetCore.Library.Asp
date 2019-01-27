@@ -159,14 +159,14 @@ namespace thZero.AspNetCore
 			IHostingEnvironment env = (IHostingEnvironment)envDescriptor.ImplementationInstance;
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesPre(services, Configuration));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesPre(services, env, Configuration));
 
             services.AddSingleton<IServiceVersionInformation, ServiceVersionInformation>();
 
             ConfigureServicesInitializeMvcPre(services);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcPre(services, Configuration));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcPre(services, env, Configuration));
 
             if (MvcType == MvcTypes.Core)
             {
@@ -216,7 +216,7 @@ namespace thZero.AspNetCore
             ConfigureServicesInitializeMvcAntiforgery(services);
 
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcPost(services, Configuration));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcPost(services, env, Configuration));
 
             ConfigureServicesInitializeMvcPost(services);
 
@@ -227,8 +227,10 @@ namespace thZero.AspNetCore
 				ConfigureServicesInitializeCompressionOptions(services);
             }
 
+            ConfigureServicesInitializePost(services, env);
+
             if (StartupExtensions != null)
-                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesPost(services, Configuration));
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesPost(services, env, Configuration));
         }
 		#endregion
 
@@ -344,7 +346,11 @@ namespace thZero.AspNetCore
                 services.AddLocalization(options => options.ResourcesPath = Localization);
         }
 
-		protected virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services)
+        protected virtual void ConfigureServicesInitializePost(IServiceCollection services, IHostingEnvironment env)
+        {
+        }
+
+        protected virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services)
 		{
 			ServiceCollection = services;
 			services.AddResponseCompression();

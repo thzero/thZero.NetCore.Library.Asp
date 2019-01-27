@@ -28,13 +28,13 @@ namespace thZero.Configuration
         public WebApplication()
         {
             Analytics = new Analytics();
-            Images = new Images();
+            Cdn = new Cdn();
             Recaptcha = new Recaptcha();
         }
 
         #region Public Properties
         public Analytics Analytics { get; set; }
-        public Images Images { get; set; }
+        public Cdn Cdn { get; set; }
         public Recaptcha Recaptcha { get; set; }
         #endregion
     }
@@ -57,7 +57,7 @@ namespace thZero.Configuration
         #endregion
     }
 
-    public class Images
+    public class Cdn
     {
         #region Public Properties
         public string Prefix { get; set; }

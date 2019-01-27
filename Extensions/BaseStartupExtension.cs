@@ -76,11 +76,11 @@ namespace thZero.AspNetCore
         {
         }
 
-        public virtual void ConfigureServicesPost(IServiceCollection services, IConfiguration configuration)
+        public virtual void ConfigureServicesPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
         {
         }
 
-        public virtual void ConfigureServicesPre(IServiceCollection services, IConfiguration configuration)
+        public virtual void ConfigureServicesPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
         {
         }
 
@@ -108,11 +108,11 @@ namespace thZero.AspNetCore
         {
         }
 
-        public virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services, IConfiguration configuration)
+        public virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
         {
         }
 
-        public virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services, IConfiguration configuration)
+        public virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
         {
         }
         #endregion
