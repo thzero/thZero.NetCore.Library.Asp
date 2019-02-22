@@ -100,11 +100,11 @@ namespace thZero.AspNetCore
         {
         }
 
-        public virtual void ConfigureServicesInitializeMvcOptionsPost(MvcOptions options)
+        public virtual void ConfigureServicesInitializeMvcBuilderOptionsPost(MvcOptions options)
         {
         }
 
-        public virtual void ConfigureServicesInitializeMvcOptionsPre(MvcOptions options)
+        public virtual void ConfigureServicesInitializeMvcBuilderOptionsPre(MvcOptions options)
         {
         }
 

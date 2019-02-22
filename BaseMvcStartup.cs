@@ -157,6 +157,9 @@ namespace thZero.AspNetCore
 			Enforce.AgainstNull(() => envDescriptor);
 
 			IHostingEnvironment env = (IHostingEnvironment)envDescriptor.ImplementationInstance;
+            Enforce.AgainstNull(() => env);
+
+            ConfigureServicesInitializePre(services, env);
 
             if (StartupExtensions != null)
                 StartupExtensions.ToList().ForEach(l => l.ConfigureServicesPre(services, env, Configuration));
@@ -173,12 +176,12 @@ namespace thZero.AspNetCore
                 IMvcCoreBuilder mvcBuilder = services.AddMvcCore(options =>
                 {
                     if (StartupExtensions != null)
-                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcOptionsPre(options));
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPre(options));
 
-                    ConfigureServicesInitializeMvcOptions(options);
+                    ConfigureServicesInitializeMvcBuilderOptions(options);
 
                     if (StartupExtensions != null)
-                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcOptionsPost(options));
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPost(options));
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -195,12 +198,12 @@ namespace thZero.AspNetCore
                 IMvcBuilder mvcBuilder = services.AddMvc(options =>
                 {
                     if (StartupExtensions != null)
-                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcOptionsPre(options));
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPre(options));
 
-                    ConfigureServicesInitializeMvcOptions(options);
+                    ConfigureServicesInitializeMvcBuilderOptions(options);
 
                     if (StartupExtensions != null)
-                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcOptionsPost(options));
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPost(options));
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -309,16 +312,20 @@ namespace thZero.AspNetCore
         {
         }
 
-        protected virtual void ConfigureServicesInitializeMvcBuilder(IMvcCoreBuilder options)
+        protected virtual void ConfigureServicesInitializeCompression(IServiceCollection services)
         {
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<GzipCompressionProvider>();
+            });
         }
 
-        protected virtual void ConfigureServicesInitializeMvcBuilder(IMvcBuilder builder)
+        protected virtual void ConfigureServicesInitializeCompressionOptions(IServiceCollection services)
         {
-        }
-
-        protected virtual void ConfigureServicesInitializeMvcOptions(MvcOptions options)
-        {
+            services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
         }
 
         protected virtual void ConfigureServicesInitializeMvcAntiforgery(IServiceCollection services)
@@ -340,36 +347,36 @@ namespace thZero.AspNetCore
             return null;
         }
 
+        protected virtual void ConfigureServicesInitializeMvcBuilder(IMvcCoreBuilder options)
+        {
+        }
+
+        protected virtual void ConfigureServicesInitializeMvcBuilder(IMvcBuilder builder)
+        {
+        }
+
+        protected virtual void ConfigureServicesInitializeMvcBuilderOptions(MvcOptions options)
+        {
+        }
+
         protected virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services)
 		{
             if (!string.IsNullOrEmpty(Localization))
                 services.AddLocalization(options => options.ResourcesPath = Localization);
         }
 
+        protected virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services)
+        {
+            ServiceCollection = services;
+            services.AddResponseCompression();
+        }
+
         protected virtual void ConfigureServicesInitializePost(IServiceCollection services, IHostingEnvironment env)
         {
         }
 
-        protected virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services)
-		{
-			ServiceCollection = services;
-			services.AddResponseCompression();
-		}
-
-		protected virtual void ConfigureServicesInitializeCompression(IServiceCollection services)
-		{
-			services.AddResponseCompression(options =>
-			{
-				options.Providers.Add<GzipCompressionProvider>();
-			});
-		}
-
-		protected virtual void ConfigureServicesInitializeCompressionOptions(IServiceCollection services)
-		{
-			services.Configure<GzipCompressionProviderOptions>(options =>
-			{
-				options.Level = CompressionLevel.Fastest;
-			});
+        protected virtual void ConfigureServicesInitializePre(IServiceCollection services, IHostingEnvironment env)
+        {
         }
 
         protected virtual void RegisterStartupExtension(IStartupExtension extension)

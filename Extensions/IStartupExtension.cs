@@ -44,12 +44,12 @@ namespace thZero.AspNetCore
         void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
         void ConfigureServicesPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
         void ConfigureServicesPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
-        void ConfigureServicesInitializeMvcBuilderPost(IMvcBuilder options);
-        void ConfigureServicesInitializeMvcBuilderPre(IMvcBuilder options);
-        void ConfigureServicesInitializeMvcBuilderPost(IMvcCoreBuilder options);
-        void ConfigureServicesInitializeMvcBuilderPre(IMvcCoreBuilder options);
-        void ConfigureServicesInitializeMvcOptionsPost(MvcOptions options);
-        void ConfigureServicesInitializeMvcOptionsPre(MvcOptions options);
+        void ConfigureServicesInitializeMvcBuilderPost(IMvcBuilder builder);
+        void ConfigureServicesInitializeMvcBuilderPre(IMvcBuilder builder);
+        void ConfigureServicesInitializeMvcBuilderPost(IMvcCoreBuilder builder);
+        void ConfigureServicesInitializeMvcBuilderPre(IMvcCoreBuilder builder);
+        void ConfigureServicesInitializeMvcBuilderOptionsPost(MvcOptions options);
+        void ConfigureServicesInitializeMvcBuilderOptionsPre(MvcOptions options);
         void ConfigureServicesInitializeMvcPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
         void ConfigureServicesInitializeMvcPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
     }
