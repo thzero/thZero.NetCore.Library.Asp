@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- *
 thZero.NetCore.Library.Asp
-Copyright (C) 2016-2018 thZero.com
+Copyright (C) 2016-2019 thZero.com
 
 <development [at] thzero [dot] com>
 
@@ -368,7 +368,6 @@ namespace thZero.AspNetCore
         protected virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services)
         {
             ServiceCollection = services;
-            services.AddResponseCompression();
         }
 
         protected virtual void ConfigureServicesInitializePost(IServiceCollection services, IHostingEnvironment env)
