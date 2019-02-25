@@ -84,7 +84,8 @@ namespace thZero.AspNetCore
                 ConfigureInitializeSsl(app, env);
             }
 
-            _useCompression = ConfigureInitializeCompression(app, env);
+            if (_useCompression)
+                ConfigureInitializeCompression(app, env);
 
             if (StartupExtensions != null)
                 StartupExtensions.ToList().ForEach(l => l.ConfigureInitializePre(app, env, loggerFactory, svp));
@@ -224,11 +225,9 @@ namespace thZero.AspNetCore
             ConfigureServicesInitializeMvcPost(services);
 
             // Only if UseCompression middleware was enabled on the IApplicationBuilder...
-            if (_useCompression)
-			{
-				ConfigureServicesInitializeCompression(services);
-				ConfigureServicesInitializeCompressionOptions(services);
-            }
+            _useCompression = ConfigureServicesInitializeCompression(services);
+			if (_useCompression)
+                ConfigureServicesInitializeCompressionOptions(services);
 
             ConfigureServicesInitializePost(services, env);
 
@@ -246,10 +245,9 @@ namespace thZero.AspNetCore
 				ConfigureInitializeProduction(app, env, svp);
         }
 
-        protected virtual bool ConfigureInitializeCompression(IApplicationBuilder app, IHostingEnvironment env)
+        protected virtual void ConfigureInitializeCompression(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseResponseCompression();
-            return true;
         }
 
         protected virtual void ConfigureInitializeDebug(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
@@ -312,12 +310,13 @@ namespace thZero.AspNetCore
         {
         }
 
-        protected virtual void ConfigureServicesInitializeCompression(IServiceCollection services)
+        protected virtual bool ConfigureServicesInitializeCompression(IServiceCollection services)
         {
             services.AddResponseCompression(options =>
             {
                 options.Providers.Add<GzipCompressionProvider>();
             });
+            return true;
         }
 
         protected virtual void ConfigureServicesInitializeCompressionOptions(IServiceCollection services)
