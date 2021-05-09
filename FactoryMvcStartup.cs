@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- *
 thZero.NetCore.Library.Asp
-Copyright (C) 2016-2019 thZero.com
+Copyright (C) 2016-2021 thZero.com
 
 <development [at] thzero [dot] com>
 
@@ -52,7 +52,7 @@ namespace thZero.AspNetCore
 		#endregion
 
 		#region Protected Methods
-		protected override void ConfigureInitialize(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+		protected override void ConfigureInitialize(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
 		{
 			base.ConfigureInitialize(app, env, loggerFactory, svp);
 

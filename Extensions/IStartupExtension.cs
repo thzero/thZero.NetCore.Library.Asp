@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- *
 thZero.NetCore.Library.Asp
-Copyright (C) 2016-2019 thZero.com
+Copyright (C) 2016-2021 thZero.com
 
 <development [at] thzero [dot] com>
 
@@ -31,26 +31,26 @@ namespace thZero.AspNetCore
 {
     public interface IStartupExtension
     {
-        void ConfigurePost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
-        void ConfigurePre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
-        void ConfigureInitializePost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
-        void ConfigureInitializePre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
-        void ConfigureInitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
-        void ConfigureInitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
+        void ConfigurePost(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
+        void ConfigurePre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
+        void ConfigureInitializePost(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
+        void ConfigureInitializePre(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
+        void ConfigureInitializeFinalPre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
+        void ConfigureInitializeFinalPost(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
         void ConfigureInitializeRoutesBuilderPost(IRouteBuilder routes);
         void ConfigureInitializeRoutesBuilderPre(IRouteBuilder routes);
         void ConfigureInitializeSsl(IApplicationBuilder app);
-        void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
-        void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
-        void ConfigureServicesPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
-        void ConfigureServicesPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
+        void ConfigureInitializeStaticPost(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
+        void ConfigureInitializeStaticPre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
+        void ConfigureServicesPost(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration);
+        void ConfigureServicesPre(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration);
         void ConfigureServicesInitializeMvcBuilderPost(IMvcBuilder builder);
         void ConfigureServicesInitializeMvcBuilderPre(IMvcBuilder builder);
         void ConfigureServicesInitializeMvcBuilderPost(IMvcCoreBuilder builder);
         void ConfigureServicesInitializeMvcBuilderPre(IMvcCoreBuilder builder);
         void ConfigureServicesInitializeMvcBuilderOptionsPost(MvcOptions options);
         void ConfigureServicesInitializeMvcBuilderOptionsPre(MvcOptions options);
-        void ConfigureServicesInitializeMvcPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
-        void ConfigureServicesInitializeMvcPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration);
+        void ConfigureServicesInitializeMvcPost(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration);
+        void ConfigureServicesInitializeMvcPre(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration);
     }
 }

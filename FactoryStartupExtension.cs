@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- *
 thZero.NetCore.Library.Asp
-Copyright (C) 2016-2019 thZero.com
+Copyright (C) 2016-2021 thZero.com
 
 <development [at] thzero [dot] com>
 
@@ -32,7 +32,7 @@ namespace thZero.AspNetCore
     public class FactoryStartupExtension : BaseStartupExtension
     {
         #region Public Methods
-        public override void ConfigureInitializePre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public override void ConfigureInitializePre(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
             base.ConfigureInitializePre(app, env, loggerFactory, svp);
 
@@ -40,14 +40,14 @@ namespace thZero.AspNetCore
             ConfigureInitializeFactory(svp);
         }
 
-        public override void ConfigureServicesPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
+        public override void ConfigureServicesPre(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
         {
             base.ConfigureServicesPre(services, env, configuration);
 
             InitializeFactory();
         }
 
-        public override void ConfigureServicesInitializeMvcPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
+        public override void ConfigureServicesInitializeMvcPost(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
         {
             base.ConfigureServicesInitializeMvcPost(services, env, configuration);
 

@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- *
 thZero.NetCore.Library.Asp
-Copyright (C) 2016-2019 thZero.com
+Copyright (C) 2016-2021 thZero.com
 
 <development [at] thzero [dot] com>
 
@@ -34,7 +34,7 @@ namespace thZero.DependencyInjection
 		{
 			ServiceScanner scanner = Initialized(services);
 
-			var hosting = services.BuildServiceProvider().GetService<IHostingEnvironment>();
+			var hosting = services.BuildServiceProvider().GetService<IWebHostEnvironment>();
 			scanner.RegisterAssembly(services, new AssemblyName(hosting.ApplicationName));
 			return services;
 		}

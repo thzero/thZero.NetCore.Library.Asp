@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- *
 thZero.NetCore.Library.Asp
-Copyright (C) 2016-2019 thZero.com
+Copyright (C) 2016-2021 thZero.com
 
 <development [at] thzero [dot] com>
 
@@ -32,27 +32,27 @@ namespace thZero.AspNetCore
     public abstract class BaseStartupExtension : IStartupExtension
     {
         #region Public Methods
-        public virtual void ConfigurePost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        public virtual void ConfigurePost(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
         }
 
-        public virtual void ConfigurePre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        public virtual void ConfigurePre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
         }
 
-        public virtual void ConfigureInitializePost(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public virtual void ConfigureInitializePost(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
         }
 
-        public virtual void ConfigureInitializePre(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public virtual void ConfigureInitializePre(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
         }
 
-        public virtual void ConfigureInitializeFinalPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        public virtual void ConfigureInitializeFinalPre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
         }
 
-        public virtual void ConfigureInitializeFinalPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        public virtual void ConfigureInitializeFinalPost(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
         }
 
@@ -68,19 +68,19 @@ namespace thZero.AspNetCore
         {
         }
 
-        public virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        public virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
         }
 
-        public virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        public virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
         }
 
-        public virtual void ConfigureServicesPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
+        public virtual void ConfigureServicesPost(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
         {
         }
 
-        public virtual void ConfigureServicesPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
+        public virtual void ConfigureServicesPre(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
         {
         }
 
@@ -108,11 +108,11 @@ namespace thZero.AspNetCore
         {
         }
 
-        public virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
+        public virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
         {
         }
 
-        public virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services, IHostingEnvironment env, IConfiguration configuration)
+        public virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
         {
         }
         #endregion

@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- *
 thZero.NetCore.Library.Asp
-Copyright (C) 2016-2019 thZero.com
+Copyright (C) 2016-2021 thZero.com
 
 <development [at] thzero [dot] com>
 
@@ -35,6 +35,7 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using thZero.Services;
@@ -59,7 +60,7 @@ namespace thZero.AspNetCore
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // This gets called after ConfigureServices.
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup
-        public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
 		{
 			Utilities.Services.Version.Instance.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
 
@@ -154,10 +155,10 @@ namespace thZero.AspNetCore
         {
             RegisterStartupExtensions();
 
-            ServiceDescriptor envDescriptor = services.Where(l => l.ServiceType.Equals(typeof(IHostingEnvironment))).FirstOrDefault();
+            ServiceDescriptor envDescriptor = services.Where(l => l.ServiceType.Equals(typeof(IWebHostEnvironment))).FirstOrDefault();
 			Enforce.AgainstNull(() => envDescriptor);
 
-			IHostingEnvironment env = (IHostingEnvironment)envDescriptor.ImplementationInstance;
+            IWebHostEnvironment env = (IWebHostEnvironment)envDescriptor.ImplementationInstance;
             Enforce.AgainstNull(() => env);
 
             ConfigureServicesInitializePre(services, env);
@@ -184,7 +185,7 @@ namespace thZero.AspNetCore
                     if (StartupExtensions != null)
                         StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPost(options));
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
                 if (StartupExtensions != null)
                     StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
@@ -206,7 +207,7 @@ namespace thZero.AspNetCore
                     if (StartupExtensions != null)
                         StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPost(options));
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
                 if (StartupExtensions != null)
                     StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
@@ -237,7 +238,7 @@ namespace thZero.AspNetCore
 		#endregion
 
 		#region Protected Methods
-		protected virtual void ConfigureInitialize(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+		protected virtual void ConfigureInitialize(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
 		{
 			if (env.IsDevelopment())
 				ConfigureInitializeDebug(app, env, svp);
@@ -245,21 +246,21 @@ namespace thZero.AspNetCore
 				ConfigureInitializeProduction(app, env, svp);
         }
 
-        protected virtual void ConfigureInitializeCompression(IApplicationBuilder app, IHostingEnvironment env)
+        protected virtual void ConfigureInitializeCompression(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseResponseCompression();
         }
 
-        protected virtual void ConfigureInitializeDebug(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        protected virtual void ConfigureInitializeDebug(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
 		{
 			app.UseDeveloperExceptionPage();
         }
 
-        protected virtual void ConfigureInitializeFinal(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        protected virtual void ConfigureInitializeFinal(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
         }
 
-        protected abstract void ConfigureInitializeProduction(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp);
+        protected abstract void ConfigureInitializeProduction(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
 
 		protected virtual void ConfigureInitializeRoutes(IApplicationBuilder app)
 		{
@@ -283,7 +284,7 @@ namespace thZero.AspNetCore
 		{
         }
 
-        protected virtual void ConfigureInitializeSsl(IApplicationBuilder app, IHostingEnvironment env)
+        protected virtual void ConfigureInitializeSsl(IApplicationBuilder app, IWebHostEnvironment env)
         {
 #if !DEBUG
             //var options = new RewriteOptions()
@@ -298,15 +299,15 @@ namespace thZero.AspNetCore
 #endif
         }
 
-        protected virtual void ConfigureInitializeStatic(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        protected virtual void ConfigureInitializeStatic(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
         }
 
-        protected virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        protected virtual void ConfigureInitializeStaticPost(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
         }
 
-        protected virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        protected virtual void ConfigureInitializeStaticPre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
         }
 
@@ -369,11 +370,11 @@ namespace thZero.AspNetCore
             ServiceCollection = services;
         }
 
-        protected virtual void ConfigureServicesInitializePost(IServiceCollection services, IHostingEnvironment env)
+        protected virtual void ConfigureServicesInitializePost(IServiceCollection services, IWebHostEnvironment env)
         {
         }
 
-        protected virtual void ConfigureServicesInitializePre(IServiceCollection services, IHostingEnvironment env)
+        protected virtual void ConfigureServicesInitializePre(IServiceCollection services, IWebHostEnvironment env)
         {
         }
 
