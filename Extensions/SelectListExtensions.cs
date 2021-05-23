@@ -58,22 +58,22 @@ namespace thZero
 
         public static ICollection<SelectListItemEx> ToSelectListAsCollection<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector)
         {
-            return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => false);
+            return ToSelectListCore(items, valueSelector, nameSelector, x => default, x => false);
         }
 
         public static ICollection<SelectListItemEx> ToSelectListAsCollection<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, IEnumerable<TValue> selectedItems)
         {
-            return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
+            return ToSelectListCore(items, valueSelector, nameSelector, x => default, x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
         }
 
         public static ICollection<SelectListItemEx> ToSelectListAsCollection<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, bool> selectedValueSelector)
         {
-            return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), selectedValueSelector);
+            return ToSelectListCore(items, valueSelector, nameSelector, x => default, selectedValueSelector);
         }
 
         public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector)
         {
-            return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => false);
+            return ToSelectListCore(items, valueSelector, nameSelector, x => default, x => false);
         }
 
         public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, TValue> relatedValueSelector)
@@ -83,7 +83,7 @@ namespace thZero
 
         public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, IEnumerable<TValue> selectedItems)
         {
-            return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
+            return ToSelectListCore(items, valueSelector, nameSelector, x => default, x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
         }
 
         public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, TValue> relatedValueSelector, IEnumerable<TValue> selectedItems)
@@ -106,7 +106,7 @@ namespace thZero
             Enforce.AgainstNull(() => (selectedValueSelector));
             Enforce.AgainstNull(() => (relatedValueSelector));
 
-            List<SelectListItemEx> list = new List<SelectListItemEx>();
+            List<SelectListItemEx> list = new();
 
             foreach (var item in items)
             {

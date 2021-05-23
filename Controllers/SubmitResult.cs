@@ -28,14 +28,14 @@ namespace thZero.AspNetCore.Results
         #region Public Methods
         public void AddError(string message, params object[] args)
         {
-            if ((args != null) && (args.Count() > 0))
+            if ((args != null) && (args.Length > 0))
                 message = string.Format(message, args);
             _errors.Add(new ErrorMessage() { Message = message });
         }
 
         public void AddError(string inputElement, string message, params object[] args)
         {
-            if ((args != null) && (args.Count() > 0))
+            if ((args != null) && (args.Length > 0))
                 message = string.Format(message, args);
             _errors.Add(new ErrorMessage() { Message = message, InputElement = inputElement });
         }
@@ -48,11 +48,11 @@ namespace thZero.AspNetCore.Results
         public bool IsDelete { get; set; }
         public bool IsSave { get; set; }
 
-        public bool Success => _errors.Count() == 0;
+        public bool Success => _errors.Count == 0;
         #endregion
 
         #region Fields
-        private ICollection<ErrorMessage> _errors = new List<ErrorMessage>();
+        private readonly ICollection<ErrorMessage> _errors = new List<ErrorMessage>();
         #endregion
 
         public class ErrorMessage

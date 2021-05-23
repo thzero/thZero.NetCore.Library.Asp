@@ -42,11 +42,11 @@ namespace thZero
 
             htmlAttributes.Add(Style, StyleDisplayNone);
 
-            TagBuilder tagBuilder = new TagBuilder(TagDiv);
+            TagBuilder tagBuilder = new(TagDiv);
             tagBuilder.GenerateId(name, string.Empty);
             tagBuilder.MergeAttributes(htmlAttributes, true);
 
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new();
             using (var writer = new StringWriter())
             {
                 tagBuilder.WriteTo(writer, HtmlEncoder.Default);
@@ -83,7 +83,7 @@ namespace thZero
             }
             else if (string.IsNullOrEmpty(controllerName))
             {
-                Uri uri = new Uri(string.Concat(urlBase, urlHelper.Action(actionName)));
+                Uri uri = new(string.Concat(urlBase, urlHelper.Action(actionName)));
                 if (relative)
                     return uri.AbsolutePath;
 
@@ -92,7 +92,7 @@ namespace thZero
 
             if (string.IsNullOrEmpty(url))
             {
-                Uri uri = new Uri(string.Concat(urlBase, urlHelper.Action(actionName, controllerName, routeValues)));
+                Uri uri = new(string.Concat(urlBase, urlHelper.Action(actionName, controllerName, routeValues)));
                 url = (relative ? uri.AbsolutePath : uri.AbsoluteUri);
             }
 
@@ -106,24 +106,24 @@ namespace thZero
 
         public static string ActionUrlWithId(this IUrlHelper urlHelper, string controllerName, int id)
         {
-            return ActionUrl(urlHelper, Constants.Controller.Action.Index, controllerName, new { id = id });
+            return ActionUrl(urlHelper, Constants.Controller.Action.Index, controllerName, new { id });
         }
 
         public static string ActionUrlWithId(this IUrlHelper urlHelper, string actionName, string controllerName, int id)
         {
-            return ActionUrl(urlHelper, actionName, controllerName, new { id = id });
+            return ActionUrl(urlHelper, actionName, controllerName, new { id });
         }
 
         public static string ActionUrlWithId(this IUrlHelper urlHelper, string controllerName, Guid? id)
         {
             id = (id.HasValue ? id : Guid.Empty);
-            return ActionUrl(urlHelper, Constants.Controller.Action.Index, controllerName, new { id = id });
+            return ActionUrl(urlHelper, Constants.Controller.Action.Index, controllerName, new { id });
         }
 
         public static string ActionUrlWithId(this IUrlHelper urlHelper, string actionName, string controllerName, Guid? id)
         {
             id = (id.HasValue ? id : Guid.Empty);
-            return ActionUrl(urlHelper, actionName, controllerName, new { id = id });
+            return ActionUrl(urlHelper, actionName, controllerName, new { id });
         }
         #endregion
 

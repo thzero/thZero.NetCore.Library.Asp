@@ -55,7 +55,7 @@ namespace thZero.AspNetCore.Mvc
         #endregion
 
         #region Fields
-        private ICollection<Error> _errors = new List<Error>();
+        private readonly ICollection<Error> _errors = new List<Error>();
         private bool _success;
         #endregion
 

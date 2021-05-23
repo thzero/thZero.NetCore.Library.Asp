@@ -40,7 +40,7 @@ namespace thZero.AspNetCore.Mvc
 
             try
             {
-                SubmitResult results = new SubmitResult();
+                SubmitResult results = new();
 
                 object value = TempData[Constants.CRUD.KeyCorrelation];
                 if (value == null)
@@ -237,7 +237,7 @@ namespace thZero.AspNetCore.Mvc
 
             try
             {
-                SubmitResult results = new SubmitResult();
+                SubmitResult results = new();
 
                 object value = TempData[Constants.CRUD.KeyCorrelation];
                 if (value == null)
@@ -344,7 +344,7 @@ namespace thZero.AspNetCore.Mvc
 
             try
             {
-                SubmitResult results = new SubmitResult();
+                SubmitResult results = new();
 
                 object value = TempData[Constants.CRUD.KeyCorrelation];
                 if (value == null)

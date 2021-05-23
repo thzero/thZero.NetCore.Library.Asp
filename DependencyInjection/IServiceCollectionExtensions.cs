@@ -58,7 +58,7 @@ namespace thZero.DependencyInjection
 #if DEBUG
                     Console.WriteLine($"\tPackage {compilationLibrary.Name} {compilationLibrary.Version}");
 #endif
-                    if (includes.Where(l => compilationLibrary.Name.StartsWithIgnore(l)).Count() == 0)
+                    if (!includes.Where(l => compilationLibrary.Name.StartsWithIgnore(l)).Any())
                     {
 #if DEBUG
                         Console.WriteLine("\tIgnored");
@@ -66,9 +66,9 @@ namespace thZero.DependencyInjection
                         continue;
                     }
 
-                    AssemblyName assemblyName = new AssemblyName(compilationLibrary.Name);
+                    AssemblyName assemblyName = new(compilationLibrary.Name);
                     //scanner.RegisterAssembly(services, assemblyName);
-                    scanner.RequestAssembly(services, assemblyName);
+                    scanner.RequestAssembly(assemblyName);
                 }
 
                 scanner.RegisterRequests(services);
@@ -153,7 +153,7 @@ namespace thZero.DependencyInjection
 
         #region Fields
         private static bool _initialized = false;
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
         #endregion
     }
 }

@@ -88,7 +88,7 @@ namespace thZero.AspNetCore.Mvc
                 {
                     if (isPost)
                     {
-                        SubmitResult results = new SubmitResult();
+                        SubmitResult results = new();
 
                         foreach (var error in allErrors)
                             results.AddError(error.ErrorMessage);
@@ -142,7 +142,7 @@ namespace thZero.AspNetCore.Mvc
                 {
                     if (isPost)
                     {
-                        SubmitResult results = new SubmitResult();
+                        SubmitResult results = new();
 
                         foreach (var error in allErrors)
                             results.AddError(error.ErrorMessage);

@@ -123,7 +123,7 @@ namespace thZero.AspNetCore.Mvc
 
             try
             {
-                SubmitResult results = new SubmitResult();
+                SubmitResult results = new();
 
                 T previousModel = null;
                 if (useCorrelationKey)
@@ -224,7 +224,7 @@ namespace thZero.AspNetCore.Mvc
 
             try
             {
-                SubmitResult results = new SubmitResult();
+                SubmitResult results = new();
 
                 T previousModel = null;
                 if (useCorrelationKey)
@@ -370,7 +370,7 @@ namespace thZero.AspNetCore.Mvc
 
             try
             {
-                SubmitResult results = new SubmitResult();
+                SubmitResult results = new();
 
                 T previousModel = null;
                 if (useCorrelationKey)
@@ -470,7 +470,7 @@ namespace thZero.AspNetCore.Mvc
 
             try
             {
-                SubmitResult results = new SubmitResult();
+                SubmitResult results = new();
 
                 T previousModel = null;
                 if (useCorrelationKey)
