@@ -21,34 +21,34 @@ using System;
 
 namespace thZero.AspNetCore.Mvc.Views.Models
 {
-	public sealed class EditRequestViewModel : RequestViewModel, IEditViewModel
-	{
-		public EditRequestViewModel()
-		{
-		}
+    public sealed class EditRequestViewModel : RequestViewModel, IEditViewModel
+    {
+        public EditRequestViewModel()
+        {
+        }
 
-		#region Public Properties
-		public string Action { get; set; }
-		public Guid CorrelationKey { get; set; }
-		#endregion
-	}
+        #region Public Properties
+        public string Action { get; set; }
+        public Guid CorrelationKey { get; set; }
+        #endregion
+    }
 
-	public abstract class EditRequestViewModel<T> : IEditViewModel<T>
-	{
-		#region Public Methods
-		public virtual void InitializeSubmit(IEditViewModel model)
-		{
-			Enforce.AgainstNull(() => model);
+    public abstract class EditRequestViewModel<T> : IEditViewModel<T>
+    {
+        #region Public Methods
+        public virtual void InitializeSubmit(IEditViewModel model)
+        {
+            Enforce.AgainstNull(() => model);
 
-			Id = ((EditRequestViewModel<T>)model).Id;
-			CorrelationKey = model.CorrelationKey;
-		}
-		#endregion
+            Id = ((EditRequestViewModel<T>)model).Id;
+            CorrelationKey = model.CorrelationKey;
+        }
+        #endregion
 
-		#region Public Properties
-		public virtual string Action { get; set; }
-		public Guid CorrelationKey { get; set; }
-		public virtual T Id { get; set; }
-		#endregion
-	}
+        #region Public Properties
+        public virtual string Action { get; set; }
+        public Guid CorrelationKey { get; set; }
+        public virtual T Id { get; set; }
+        #endregion
+    }
 }

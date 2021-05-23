@@ -21,10 +21,10 @@ using System;
 
 namespace thZero.AspNetCore.Mvc
 {
-	public sealed class InvalidCorrelationKeyMatchException : Exception
-	{
-		public InvalidCorrelationKeyMatchException() : base() { }
-		public InvalidCorrelationKeyMatchException(string message) : base(message) { }
-		public InvalidCorrelationKeyMatchException(string message, Exception inner) : base(message, inner) { }
-	}
+    public sealed class InvalidCorrelationKeyMatchException : Exception
+    {
+        public InvalidCorrelationKeyMatchException() : base() { }
+        public InvalidCorrelationKeyMatchException(string message) : base(message) { }
+        public InvalidCorrelationKeyMatchException(string message, Exception inner) : base(message, inner) { }
+    }
 }

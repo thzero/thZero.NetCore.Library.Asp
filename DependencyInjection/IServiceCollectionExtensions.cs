@@ -27,133 +27,133 @@ using Microsoft.Extensions.DependencyModel;
 
 namespace thZero.DependencyInjection
 {
-	public static class ServiceCollectionExtensions
-	{
-		#region Public Methods
-		public static IServiceCollection ScanForDependencies(this IServiceCollection services)
-		{
-			ServiceScanner scanner = Initialized(services);
+    public static class ServiceCollectionExtensions
+    {
+        #region Public Methods
+        public static IServiceCollection ScanForDependencies(this IServiceCollection services)
+        {
+            ServiceScanner scanner = Initialized(services);
 
-			var hosting = services.BuildServiceProvider().GetService<IWebHostEnvironment>();
-			scanner.RegisterAssembly(services, new AssemblyName(hosting.ApplicationName));
-			return services;
-		}
+            var hosting = services.BuildServiceProvider().GetService<IWebHostEnvironment>();
+            scanner.RegisterAssembly(services, new AssemblyName(hosting.ApplicationName));
+            return services;
+        }
 
-		public static IServiceCollection ScanForDependencies(this IServiceCollection services, Type rootAssembly, params string[] includes)
-		{
-			Enforce.AgainstNull(() => rootAssembly);
+        public static IServiceCollection ScanForDependencies(this IServiceCollection services, Type rootAssembly, params string[] includes)
+        {
+            Enforce.AgainstNull(() => rootAssembly);
 
-			if (includes != null)
-			{
-				ServiceScanner scanner = Initialized(services);
+            if (includes != null)
+            {
+                ServiceScanner scanner = Initialized(services);
 
-				//https://github.com/aspnet/Announcements/issues/149
-				// Default DependencyContext is retrieved from entry assembly
-				var deps = DependencyContext.Default;
+                //https://github.com/aspnet/Announcements/issues/149
+                // Default DependencyContext is retrieved from entry assembly
+                var deps = DependencyContext.Default;
 #if DEBUG
-				Console.WriteLine($"Compilation depenencies");
+                Console.WriteLine($"Compilation depenencies");
 #endif
-				foreach (var compilationLibrary in deps.CompileLibraries)
-				{
+                foreach (var compilationLibrary in deps.CompileLibraries)
+                {
 #if DEBUG
-					Console.WriteLine($"\tPackage {compilationLibrary.Name} {compilationLibrary.Version}");
+                    Console.WriteLine($"\tPackage {compilationLibrary.Name} {compilationLibrary.Version}");
 #endif
-					if (includes.Where(l => compilationLibrary.Name.StartsWithIgnore(l)).Count() == 0)
-					{
+                    if (includes.Where(l => compilationLibrary.Name.StartsWithIgnore(l)).Count() == 0)
+                    {
 #if DEBUG
-						Console.WriteLine("\tIgnored");
+                        Console.WriteLine("\tIgnored");
 #endif
-						continue;
-					}
+                        continue;
+                    }
 
-					AssemblyName assemblyName = new AssemblyName(compilationLibrary.Name);
-					//scanner.RegisterAssembly(services, assemblyName);
-					scanner.RequestAssembly(services, assemblyName);
-				}
+                    AssemblyName assemblyName = new AssemblyName(compilationLibrary.Name);
+                    //scanner.RegisterAssembly(services, assemblyName);
+                    scanner.RequestAssembly(services, assemblyName);
+                }
 
-				scanner.RegisterRequests(services);
+                scanner.RegisterRequests(services);
 
-//#if DEBUG
-//				Console.WriteLine($"Runtime depenencies");
-//#endif
-//				foreach (var compilationLibrary in deps.RuntimeLibraries)
-//				{
-//#if DEBUG
-//					Console.WriteLine($"\tPackage {compilationLibrary.Name} {compilationLibrary.Version}");
-//#endif
-//					foreach (var assembly2 in compilationLibrary.Assemblies)
-//					{
-//						if (includes.Where(l => assembly2.Name.Name.StartsWithIgnore(l)).Count() == 0)
-//						{
-//#if DEBUG
-//							Console.WriteLine("\tIgnored");
-//#endif
-//							continue;
-//						}
-//#if DEBUG
-//						Console.WriteLine($"\t\tReference: {assembly2.Name}");
-//						scanner.RegisterAssembly(services, assembly2.Name);
-//#endif
-//					}
-//				}
+                //#if DEBUG
+                //				Console.WriteLine($"Runtime depenencies");
+                //#endif
+                //				foreach (var compilationLibrary in deps.RuntimeLibraries)
+                //				{
+                //#if DEBUG
+                //					Console.WriteLine($"\tPackage {compilationLibrary.Name} {compilationLibrary.Version}");
+                //#endif
+                //					foreach (var assembly2 in compilationLibrary.Assemblies)
+                //					{
+                //						if (includes.Where(l => assembly2.Name.Name.StartsWithIgnore(l)).Count() == 0)
+                //						{
+                //#if DEBUG
+                //							Console.WriteLine("\tIgnored");
+                //#endif
+                //							continue;
+                //						}
+                //#if DEBUG
+                //						Console.WriteLine($"\t\tReference: {assembly2.Name}");
+                //						scanner.RegisterAssembly(services, assembly2.Name);
+                //#endif
+                //					}
+                //				}
 
-				//				Assembly assembly = rootAssembly.GetTypeInfo().Assembly;
-				//				var assemblyNames = assembly.GetReferencedAssemblies();
-				//				foreach (AssemblyName assemblyName in assemblyNames)
-				//				{
-				//#if DEBUG
-				//					Console.WriteLine("Name={0}, Version={1}", assemblyName.Name, assemblyName.Version);
-				//#endif
-				//					if (includes.Where(l => assemblyName.Name.StartsWithIgnore(l)).Count() == 0)
-				//					{
-				//#if DEBUG
-				//						Console.WriteLine("\tIgnored");
-				//#endif
-				//						continue;
-				//					}
+                //				Assembly assembly = rootAssembly.GetTypeInfo().Assembly;
+                //				var assemblyNames = assembly.GetReferencedAssemblies();
+                //				foreach (AssemblyName assemblyName in assemblyNames)
+                //				{
+                //#if DEBUG
+                //					Console.WriteLine("Name={0}, Version={1}", assemblyName.Name, assemblyName.Version);
+                //#endif
+                //					if (includes.Where(l => assemblyName.Name.StartsWithIgnore(l)).Count() == 0)
+                //					{
+                //#if DEBUG
+                //						Console.WriteLine("\tIgnored");
+                //#endif
+                //						continue;
+                //					}
 
-				//					scanner.RegisterAssembly(services, assemblyName);
-				//				}
-			}
+                //					scanner.RegisterAssembly(services, assemblyName);
+                //				}
+            }
 
-			return services;
-		}
+            return services;
+        }
 
-		public static IServiceCollection ScanForDependencies(this IServiceCollection services, AssemblyName assemblyName)
-		{
-			ServiceScanner scanner = Initialized(services);
-			scanner.RegisterAssembly(services, assemblyName);
-			return services;
-		}
-		#endregion
+        public static IServiceCollection ScanForDependencies(this IServiceCollection services, AssemblyName assemblyName)
+        {
+            ServiceScanner scanner = Initialized(services);
+            scanner.RegisterAssembly(services, assemblyName);
+            return services;
+        }
+        #endregion
 
-		#region Private Methods
-		private static ServiceScanner Initialized(this IServiceCollection services)
-		{
-			if (!_initialized)
-			{
-				lock (_lock)
-				{
-					if (!_initialized)
-					{
+        #region Private Methods
+        private static ServiceScanner Initialized(this IServiceCollection services)
+        {
+            if (!_initialized)
+            {
+                lock (_lock)
+                {
+                    if (!_initialized)
+                    {
 
-						services.AddSingleton<ServiceScanner>();
-						_initialized = true;
-					}
-				}
-			}
+                        services.AddSingleton<ServiceScanner>();
+                        _initialized = true;
+                    }
+                }
+            }
 
-			var scanner = services.BuildServiceProvider().GetService<ServiceScanner>();
-			if (null == scanner)
-				throw new InvalidOperationException("Invalid ServiceScanner");
+            var scanner = services.BuildServiceProvider().GetService<ServiceScanner>();
+            if (null == scanner)
+                throw new InvalidOperationException("Invalid ServiceScanner");
 
-			return scanner;
-		}
-		#endregion
+            return scanner;
+        }
+        #endregion
 
-		#region Fields
-		private static bool _initialized = false;
-		private static readonly object _lock = new object();
-		#endregion
-	}
+        #region Fields
+        private static bool _initialized = false;
+        private static readonly object _lock = new object();
+        #endregion
+    }
 }

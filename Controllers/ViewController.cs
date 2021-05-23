@@ -1,4 +1,4 @@
-﻿/* ------------------------------------------------------------------------- *
+/* ------------------------------------------------------------------------- *
 thZero.NetCore.Library.Asp
 Copyright (C) 2016-2021 thZero.com
 
@@ -17,22 +17,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
  * ------------------------------------------------------------------------- */
 
-using System;
+using Microsoft.Extensions.Logging;
 
-namespace thZero.Configuration
+namespace thZero.AspNetCore.Mvc
 {
-    public class AuthorizationWebApplication<TDefaults, TEmail, TAuthorization> : WebApplication<TDefaults, TEmail>
-        where TDefaults : ApplicationDefaults
-        where TEmail : ApplicationEmail
-        where TAuthorization : class
+    public abstract partial class ViewController : BaseController
     {
-        public AuthorizationWebApplication()
-        {
-            Authorization = Utilities.Activator.CreateInstanceEx<TAuthorization>();
-        }
+    }
 
-        #region Public Properties
-        public TAuthorization Authorization { get; set; }
-        #endregion
+    public abstract partial class ViewController<TController> : BaseController<TController>
+        where TController : ViewController
+    {
+        protected ViewController(ILogger<TController> logger) : base(logger)
+        {
+        }
     }
 }

@@ -37,8 +37,8 @@ namespace thZero.AspNetCore
         void ConfigureInitializePre(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
         void ConfigureInitializeFinalPre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
         void ConfigureInitializeFinalPost(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
-        void ConfigureInitializeRoutesBuilderPost(IRouteBuilder routes);
-        void ConfigureInitializeRoutesBuilderPre(IRouteBuilder routes);
+        void ConfigureInitializeRoutingEndpointsRouteBuilderPost(IEndpointRouteBuilder endpointsRouteBuilder);
+        void ConfigureInitializeRoutingEndpointsRouteBuilderPre(IEndpointRouteBuilder endpointsRouteBuilder);
         void ConfigureInitializeSsl(IApplicationBuilder app);
         void ConfigureInitializeStaticPost(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
         void ConfigureInitializeStaticPre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);

@@ -21,10 +21,10 @@ using System;
 
 namespace thZero.AspNetCore.Mvc
 {
-	public sealed class InvalidFailureException : Exception
-	{
-		public InvalidFailureException() : base() { }
-		public InvalidFailureException(string message) : base(message) { }
-		public InvalidFailureException(string message, Exception inner) : base(message, inner) { }
-	}
+    public sealed class InvalidFailureException : Exception
+    {
+        public InvalidFailureException() : base() { }
+        public InvalidFailureException(string message) : base(message) { }
+        public InvalidFailureException(string message, Exception inner) : base(message, inner) { }
+    }
 }

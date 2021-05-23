@@ -25,157 +25,158 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 using thZero.AspNetCore.Mvc.Views.Models;
+using thZero.Responses;
 
 namespace thZero.AspNetCore.Mvc
 {
-	public abstract partial class BaseController<TController>
-	{
-		#region Protected Methods
-		protected IActionResult InitializeJsonGetResult<T>(T model, Func<T, IActionResult> methodLoad)
-			where T : RequestViewModel
-		{
-			return InitializeJsonGetResult(model, null, methodLoad);
-		}
+    public abstract partial class BaseController<TController>
+    {
+        #region Protected Methods
+        protected IActionResult InitializeJsonGetResult<T>(T model, Func<T, IActionResult> methodLoad)
+            where T : RequestViewModel
+        {
+            return InitializeJsonGetResult(model, null, methodLoad);
+        }
 
-		protected IActionResult InitializeJsonGetResult<T>(T model, Func<T, bool> methodValidate, Func<T, IActionResult> methodLoad)
-			where T : RequestViewModel
-		{
-			const string Declaration = "InitializeJsonGetResult";
+        protected IActionResult InitializeJsonGetResult<T>(T model, Func<T, bool> methodValidate, Func<T, IActionResult> methodLoad)
+            where T : RequestViewModel
+        {
+            const string Declaration = "InitializeJsonGetResult";
 
-			Enforce.AgainstNull<RequestViewModel>(() => model);
-			Enforce.AgainstNull(() => methodLoad);
+            Enforce.AgainstNull<RequestViewModel>(() => model);
+            Enforce.AgainstNull(() => methodLoad);
 
-			try
-			{
-				if (methodValidate != null)
-				{
-					if (!methodValidate(model))
-						return JsonGetFailure();
-				}
+            try
+            {
+                if (methodValidate != null)
+                {
+                    if (!methodValidate(model))
+                        return JsonGetFailure();
+                }
 
-				if (ModelState.IsValid)
-					return methodLoad(model);
+                if (ModelState.IsValid)
+                    return methodLoad(model);
 
-				throw new InvalidFailureException();
-			}
-			catch (Exception ex)
-			{
-				Logger?.LogError(Declaration, ex);
-				throw;
-			}
-		}
+                throw new InvalidFailureException();
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(Declaration, ex);
+                throw;
+            }
+        }
 
-		protected async Task<IActionResult> InitializeJsonGetResultAsync<T>(T model, Func<T, Task<IActionResult>> methodLoad)
-			where T : RequestViewModel
-		{
-			return await InitializeJsonGetResultAsync<T>(model, null, methodLoad);
-		}
+        protected async Task<IActionResult> InitializeJsonGetResultAsync<T>(T model, Func<T, Task<IActionResult>> methodLoad)
+            where T : RequestViewModel
+        {
+            return await InitializeJsonGetResultAsync<T>(model, null, methodLoad);
+        }
 
-		protected async Task<IActionResult> InitializeJsonGetResultAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<IActionResult>> methodLoad)
-			where T : RequestViewModel
-		{
-			const string Declaration = "InitializeJsonGetResult";
+        protected async Task<IActionResult> InitializeJsonGetResultAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<IActionResult>> methodLoad)
+            where T : RequestViewModel
+        {
+            const string Declaration = "InitializeJsonGetResultAsync";
 
-			Enforce.AgainstNull<RequestViewModel>(() => model);
-			Enforce.AgainstNull(() => methodLoad);
+            Enforce.AgainstNull<RequestViewModel>(() => model);
+            Enforce.AgainstNull(() => methodLoad);
 
-			try
-			{
-				if (methodValidate != null)
-				{
-					if (!(await methodValidate(model)))
-						return await Task.FromResult(JsonGetFailure());
-				}
+            try
+            {
+                if (methodValidate != null)
+                {
+                    if (!(await methodValidate(model)))
+                        return await Task.FromResult(JsonGetFailure());
+                }
 
-				return await Task.FromResult(await methodLoad(model));
+                return await Task.FromResult(await methodLoad(model));
 
-				throw new InvalidFailureException();
-			}
-			catch (Exception ex)
-			{
-				Logger?.LogError(Declaration, ex);
-				throw;
-			}
-		}
-		#endregion
-	}
+                throw new InvalidFailureException();
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(Declaration, ex);
+                throw;
+            }
+        }
+        #endregion
+    }
 
-	public abstract partial class BaseController
-	{
-		#region Protected Methods
-		protected JsonResult JsonGet()
-		{
-			return JsonGet(null);
-		}
+    public abstract partial class BaseController
+    {
+        #region Protected Methods
+        protected virtual JsonResult JsonGet()
+        {
+            return JsonGet(null);
+        }
 
-		protected JsonResult JsonGet(object data)
-		{
-			return new JsonResultEx(new JsonOutputResponseViewModel<object>() { Success = true, Data = data });
-		}
+        protected virtual JsonResult JsonGet(object data)
+        {
+            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Data = data });
+        }
 
-		protected JsonResult JsonGet<T>(T data)
-			where T : class
-		{
-			return new JsonResultEx(new JsonOutputResponseViewModel<T>() { Success = true, Data = data });
-		}
+        protected virtual JsonResult JsonGet<T>(T data)
+            where T : class
+        {
+            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Data = data });
+        }
 
         protected virtual JsonResult JsonGetFailure(string message)
-		{
-			return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddError(message));
-		}
+        {
+            return new JsonResultEx((new ErrorResponse()).AddError(message));
+        }
 
         protected virtual JsonResult JsonGetFailure()
-		{
-			return new JsonResultEx(new JsonOutputErrorResponseViewModel());
-		}
+        {
+            return new JsonResultEx(new ErrorResponse());
+        }
 
-        protected virtual JsonResult JsonGetSelect(IEnumerable<SelectListItem> list)
-		{
-			return new JsonResultEx(new JsonOutputSearchResponseViewModel<SelectListItem>() { Success = true, Data = list });
-		}
+        protected virtual JsonResult JsonVGetSelect(IEnumerable<SelectListItem> list)
+        {
+            return new JsonResultEx(new SearchSuccessResponse<SelectListItem>() { Success = true, Data = list });
+        }
 
-		protected JsonResult JsonPost()
-		{
-			return JsonPost(null);
-		}
+        protected virtual JsonResult JsonPost()
+        {
+            return JsonPost(null);
+        }
 
-		protected JsonResult JsonPost(object data)
-		{
-			return new JsonResultEx(new JsonOutputResponseViewModel<object>() { Success = true, Data = data });
-		}
+        protected virtual JsonResult JsonPost(object data)
+        {
+            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Data = data });
+        }
 
-		protected JsonResult JsonPost<T>(T data)
-			where T : class
-		{
-			return new JsonResultEx(new JsonOutputResponseViewModel<T>() { Success = true, Data = data });
-		}
+        protected virtual JsonResult JsonPost<T>(T data)
+            where T : class
+        {
+            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Data = data });
+        }
 
         protected virtual JsonResult JsonPostFailure()
-		{
-			return new JsonResultEx(new JsonOutputErrorResponseViewModel());
-		}
+        {
+            return new JsonResultEx(new ErrorResponse());
+        }
 
         protected virtual JsonResult JsonPostFailure(IEnumerable<string> errors)
-		{
-			return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddErrors(errors));
-		}
+        {
+            return new JsonResultEx((new ErrorResponse()).AddErrors(errors));
+        }
 
         protected virtual JsonResult JsonPostFailure(string message)
-		{
-			return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddError(message));
-		}
+        {
+            return new JsonResultEx((new ErrorResponse()).AddError(message));
+        }
 
         protected virtual JsonResult JsonPostFailure<T>(T data)
-			where T : class
-		{
-			return new JsonResultEx(new JsonOutputResponseViewModel<T>() { Success = false, Data = data });
-		}
+            where T : class
+        {
+            return new JsonResultEx(new SuccessResponse<T>() { Success = false, Data = data });
+        }
 
         protected virtual JsonResult JsonPostFailure<T>(T data, string message)
-			where T : class
-		{
-			return new JsonResultEx((new JsonOutputResponseViewModel<T>() { Success = false, Data = data }).AddError(message));
-		}
-		#endregion
-	}
+            where T : class
+        {
+            return new JsonResultEx((new SuccessResponse<T>() { Success = false, Data = data }).AddError(message));
+        }
+        #endregion
+    }
 }

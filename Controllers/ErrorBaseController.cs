@@ -26,41 +26,41 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace thZero.AspNetCore.Mvc
 {
-	public abstract class ErrorBaseController : BaseController
-	{
-		#region Public Methods
-		[HttpGet]
-		[Route("errors")]
-		public async Task<ActionResult> Index()
-		{
-			return await Task.FromResult(new StatusCodeResult(500));
-		}
+    public abstract class ErrorBaseController : BaseController
+    {
+        #region Public Methods
+        [HttpGet]
+        [Route("errors")]
+        public async Task<ActionResult> Index()
+        {
+            return await Task.FromResult(new StatusCodeResult(500));
+        }
 
-		[HttpGet]
-		[Route("errors/{code}")]
-		public virtual IActionResult Index(string code)
-		{
-			IActionResult result = HandleIndex(code);
-			if (IsAjax())
-				return result;
+        [HttpGet]
+        [Route("errors/{code}")]
+        public virtual IActionResult Index(string code)
+        {
+            IActionResult result = HandleIndex(code);
+            if (IsAjax())
+                return result;
 
-			return result;
-		}
-		#endregion
+            return result;
+        }
+        #endregion
 
-		#region Protected Methods
-		protected virtual IActionResult HandleIndex(string code)
-		{
+        #region Protected Methods
+        protected virtual IActionResult HandleIndex(string code)
+        {
 #if DEBUG
 
-			string requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-			ViewData["RequestId"] = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            string requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            ViewData["RequestId"] = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
 #endif
-			HttpStatusCode result = HttpStatusCode.InternalServerError;
-			if (!Enum.TryParse<HttpStatusCode>(code, out result))
-				return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
-			return new StatusCodeResult((int)result);
-		}
-#endregion
-	}
+            HttpStatusCode result = HttpStatusCode.InternalServerError;
+            if (!Enum.TryParse<HttpStatusCode>(code, out result))
+                return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+            return new StatusCodeResult((int)result);
+        }
+        #endregion
+    }
 }

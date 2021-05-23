@@ -23,9 +23,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace thZero.DependencyInjection
 {
-	public class ServiceScannerRequest
-	{
-		public ServiceDescriptor Descriptor { get; set; }
-		public long Order { get; set; }
-	}
+    public class ServiceScannerRequest
+    {
+        public ServiceDescriptor Descriptor { get; set; }
+        public long Order { get; set; }
+    }
 }

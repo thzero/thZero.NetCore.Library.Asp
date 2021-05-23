@@ -28,53 +28,53 @@ using thZero.Services;
 
 namespace thZero.DependencyInjection
 {
-	public class ServiceScanner : IService
-	{
-		#region Public Methods
-		public void RegisterAssembly(IServiceCollection services, AssemblyName assemblyName)
-		{
-			IEnumerable<DependencyAttribute> attributes;
-			ServiceDescriptor descriptor;
-			var assembly = Assembly.Load(assemblyName);
-			foreach (var type in assembly.DefinedTypes)
-			{
-				attributes = type.GetCustomAttributes<DependencyAttribute>();
-				foreach (var dependencyAttribute in attributes)
-				{
-					descriptor = dependencyAttribute.BuildServiceDescriptor(type);
-					services.Add(descriptor);
-				}
-			}
-		}
+    public class ServiceScanner : IService
+    {
+        #region Public Methods
+        public void RegisterAssembly(IServiceCollection services, AssemblyName assemblyName)
+        {
+            IEnumerable<DependencyAttribute> attributes;
+            ServiceDescriptor descriptor;
+            var assembly = Assembly.Load(assemblyName);
+            foreach (var type in assembly.DefinedTypes)
+            {
+                attributes = type.GetCustomAttributes<DependencyAttribute>();
+                foreach (var dependencyAttribute in attributes)
+                {
+                    descriptor = dependencyAttribute.BuildServiceDescriptor(type);
+                    services.Add(descriptor);
+                }
+            }
+        }
 
-		public void RequestAssembly(IServiceCollection services, AssemblyName assemblyName)
-		{
-			IEnumerable<DependencyAttribute> attributes;
-			ServiceScannerRequest request;
-			ServiceDescriptor descriptor;
-			var assembly = Assembly.Load(assemblyName);
-			foreach (var type in assembly.DefinedTypes)
-			{
-				attributes = type.GetCustomAttributes<DependencyAttribute>();
-				foreach (var dependencyAttribute in attributes)
-				{
-					descriptor = dependencyAttribute.BuildServiceDescriptor(type);
-					request = new ServiceScannerRequest() { Descriptor = descriptor, Order = dependencyAttribute.Order };
-					_requests.Add(request);
-				}
-			}
-		}
+        public void RequestAssembly(IServiceCollection services, AssemblyName assemblyName)
+        {
+            IEnumerable<DependencyAttribute> attributes;
+            ServiceScannerRequest request;
+            ServiceDescriptor descriptor;
+            var assembly = Assembly.Load(assemblyName);
+            foreach (var type in assembly.DefinedTypes)
+            {
+                attributes = type.GetCustomAttributes<DependencyAttribute>();
+                foreach (var dependencyAttribute in attributes)
+                {
+                    descriptor = dependencyAttribute.BuildServiceDescriptor(type);
+                    request = new ServiceScannerRequest() { Descriptor = descriptor, Order = dependencyAttribute.Order };
+                    _requests.Add(request);
+                }
+            }
+        }
 
-		public void RegisterRequests(IServiceCollection services)
-		{
-			IOrderedEnumerable<ServiceScannerRequest> ordered = _requests.OrderBy(l => l.Order);
-			foreach(ServiceScannerRequest request in ordered)
-				services.Add(request.Descriptor);
-		}
-		#endregion
+        public void RegisterRequests(IServiceCollection services)
+        {
+            IOrderedEnumerable<ServiceScannerRequest> ordered = _requests.OrderBy(l => l.Order);
+            foreach (ServiceScannerRequest request in ordered)
+                services.Add(request.Descriptor);
+        }
+        #endregion
 
-		#region Fields
-		private static readonly ICollection<ServiceScannerRequest> _requests = new List<ServiceScannerRequest>();
-		#endregion
-	}
+        #region Fields
+        private static readonly ICollection<ServiceScannerRequest> _requests = new List<ServiceScannerRequest>();
+        #endregion
+    }
 }

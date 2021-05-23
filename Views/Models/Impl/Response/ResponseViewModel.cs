@@ -21,7 +21,7 @@ using System;
 
 namespace thZero.AspNetCore.Mvc.Views.Models
 {
-	public abstract class ResponseViewModel : IViewModel
-	{
-	}
+    public abstract class ResponseViewModel : IViewModel
+    {
+    }
 }

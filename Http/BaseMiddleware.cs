@@ -23,19 +23,19 @@ using Microsoft.AspNetCore.Http;
 
 namespace thZero.AspNetCore.Http
 {
-	public abstract class BaseMiddleware
-	{
-		public BaseMiddleware(RequestDelegate next)
-		{
-			_next = next;
-		}
+    public abstract class BaseMiddleware
+    {
+        public BaseMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
 
-		#region Protected Properties
-		protected RequestDelegate Next { get; }
-		#endregion
+        #region Protected Properties
+        protected RequestDelegate Next { get; }
+        #endregion
 
-		#region Fields
-		private readonly RequestDelegate _next;
-		#endregion
-	}
+        #region Fields
+        private readonly RequestDelegate _next;
+        #endregion
+    }
 }

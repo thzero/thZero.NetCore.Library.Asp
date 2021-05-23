@@ -38,6 +38,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using thZero.AspNetCore.Filters.Instrumentation;
+using thZero.Instrumentation;
 using thZero.Services;
 
 namespace thZero.AspNetCore
@@ -49,8 +51,8 @@ namespace thZero.AspNetCore
     public abstract class LoggableMvcStartup<TStartup> : BaseMvcStartup
         where TStartup : BaseMvcStartup
     {
-		protected LoggableMvcStartup(IConfiguration configuration, ILogger<TStartup> logger)
-		{
+        protected LoggableMvcStartup(IConfiguration configuration, ILogger<TStartup> logger)
+        {
             Configuration = configuration;
             Logger = logger;
 
@@ -61,16 +63,16 @@ namespace thZero.AspNetCore
         // This gets called after ConfigureServices.
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
-		{
-			Utilities.Services.Version.Instance.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
+        {
+            Utilities.Services.Version.Instance.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
 
             IServiceVersionInformation serviceVersionInformation = svp.GetService<IServiceVersionInformation>();
             serviceVersionInformation.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
 
             Utilities.ServiceProvider.Instance = svp;
-			Utilities.Web.Environment.IsDevelopment = env.IsDevelopment();
-			Utilities.Web.Environment.IsProduction = env.IsProduction();
-			Utilities.Web.Environment.IsStaging = env.IsStaging();
+            Utilities.Web.Environment.IsDevelopment = env.IsDevelopment();
+            Utilities.Web.Environment.IsProduction = env.IsProduction();
+            Utilities.Web.Environment.IsStaging = env.IsStaging();
 
             ConfigureInitializeServiceProvider(svp);
 
@@ -109,32 +111,32 @@ namespace thZero.AspNetCore
             ConfigureInitializeStaticPost(app, env, svp);
 
             var defaultCultureName = "en";
-			var defaultCulture = new CultureInfo(defaultCultureName);
-			var config = Utilities.Web.Configuration.Application;
-			IList<CultureInfo> supportedCultures = new List<CultureInfo>();
-			CultureInfo info = null;
-			foreach (var item in config.Cultures)
-			{
-				info = new CultureInfo(item.Abbreviation);
-				supportedCultures.Add(info);
-				if (item.Default)
-					defaultCulture = info;
-			}
-			if (supportedCultures.Count == 0)
-				supportedCultures.Add(defaultCulture);
+            var defaultCulture = new CultureInfo(defaultCultureName);
+            var config = Utilities.Web.Configuration.Application;
+            IList<CultureInfo> supportedCultures = new List<CultureInfo>();
+            CultureInfo info = null;
+            foreach (var item in config.Cultures)
+            {
+                info = new CultureInfo(item.Abbreviation);
+                supportedCultures.Add(info);
+                if (item.Default)
+                    defaultCulture = info;
+            }
+            if (supportedCultures.Count == 0)
+                supportedCultures.Add(defaultCulture);
 
-			app.UseRequestLocalization(new RequestLocalizationOptions
-			{
-				DefaultRequestCulture = new RequestCulture(defaultCultureName),
-				// Formatting numbers, dates, etc.
-				SupportedCultures = supportedCultures,
-				// UI strings that we have localized.
-				SupportedUICultures = supportedCultures
-			});
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(defaultCultureName),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
 
-			app.UseStatusCodePagesWithReExecute("/errors/{0}");
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
-            ConfigureInitializeRoutes(app);
+            ConfigureInitializeRouting(app);
 
             if (StartupExtensions != null)
                 StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeFinalPre(app, env, svp));
@@ -148,15 +150,15 @@ namespace thZero.AspNetCore
                 StartupExtensions.ToList().ForEach(l => l.ConfigurePost(app, env, svp));
         }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
-		// This gets called before Configure.
-		// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup
-		public virtual void ConfigureServices(IServiceCollection services)
+        // This method gets called by the runtime. Use this method to add services to the container.
+        // This gets called before Configure.
+        // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             RegisterStartupExtensions();
 
             ServiceDescriptor envDescriptor = services.Where(l => l.ServiceType.Equals(typeof(IWebHostEnvironment))).FirstOrDefault();
-			Enforce.AgainstNull(() => envDescriptor);
+            Enforce.AgainstNull(() => envDescriptor);
 
             IWebHostEnvironment env = (IWebHostEnvironment)envDescriptor.ImplementationInstance;
             Enforce.AgainstNull(() => env);
@@ -180,6 +182,7 @@ namespace thZero.AspNetCore
                     if (StartupExtensions != null)
                         StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPre(options));
 
+                    ConfigureServicesInitializeMvcBuilderOptionsFilters(options);
                     ConfigureServicesInitializeMvcBuilderOptions(options);
 
                     if (StartupExtensions != null)
@@ -202,6 +205,7 @@ namespace thZero.AspNetCore
                     if (StartupExtensions != null)
                         StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPre(options));
 
+                    ConfigureServicesInitializeMvcBuilderOptionsFilters(options);
                     ConfigureServicesInitializeMvcBuilderOptions(options);
 
                     if (StartupExtensions != null)
@@ -227,7 +231,7 @@ namespace thZero.AspNetCore
 
             // Only if UseCompression middleware was enabled on the IApplicationBuilder...
             _useCompression = ConfigureServicesInitializeCompression(services);
-			if (_useCompression)
+            if (_useCompression)
                 ConfigureServicesInitializeCompressionOptions(services);
 
             ConfigureServicesInitializePost(services, env);
@@ -235,15 +239,15 @@ namespace thZero.AspNetCore
             if (StartupExtensions != null)
                 StartupExtensions.ToList().ForEach(l => l.ConfigureServicesPost(services, env, Configuration));
         }
-		#endregion
+        #endregion
 
-		#region Protected Methods
-		protected virtual void ConfigureInitialize(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
-		{
-			if (env.IsDevelopment())
-				ConfigureInitializeDebug(app, env, svp);
-			else
-				ConfigureInitializeProduction(app, env, svp);
+        #region Protected Methods
+        protected virtual void ConfigureInitialize(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        {
+            if (env.IsDevelopment())
+                ConfigureInitializeDebug(app, env, svp);
+            else
+                ConfigureInitializeProduction(app, env, svp);
         }
 
         protected virtual void ConfigureInitializeCompression(IApplicationBuilder app, IWebHostEnvironment env)
@@ -252,8 +256,8 @@ namespace thZero.AspNetCore
         }
 
         protected virtual void ConfigureInitializeDebug(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
-		{
-			app.UseDeveloperExceptionPage();
+        {
+            app.UseDeveloperExceptionPage();
         }
 
         protected virtual void ConfigureInitializeFinal(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
@@ -262,26 +266,29 @@ namespace thZero.AspNetCore
 
         protected abstract void ConfigureInitializeProduction(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
 
-		protected virtual void ConfigureInitializeRoutes(IApplicationBuilder app)
-		{
-			app.UseMvc(routes =>
-			{
-                if (StartupExtensions != null)
-                    StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeRoutesBuilderPre(routes));
+        protected virtual void ConfigureInitializeRouting(IApplicationBuilder app)
+        {
+            app.UseRouting();
 
-                ConfigureInitializeRoutesBuilder(routes);
+            app.UseEndpoints(endpointsRouteBuilder =>
+            {
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeRoutingEndpointsRouteBuilderPre(endpointsRouteBuilder));
+
+                ConfigureInitializeRoutingEndpointsRouteBuilder(endpointsRouteBuilder);
 
                 if (StartupExtensions != null)
-                    StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeRoutesBuilderPost(routes));
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeRoutingEndpointsRouteBuilderPost(endpointsRouteBuilder));
             });
-		}
+        }
 
-		protected virtual void ConfigureInitializeRoutesBuilder(IRouteBuilder routes)
-		{
-		}
+        protected virtual void ConfigureInitializeRoutingEndpointsRouteBuilder(IEndpointRouteBuilder endpointsRouteBuilder)
+        {
+            endpointsRouteBuilder.MapControllers();
+        }
 
-		protected virtual void ConfigureInitializeServiceProvider(IServiceProvider svp)
-		{
+        protected virtual void ConfigureInitializeServiceProvider(IServiceProvider svp)
+        {
         }
 
         protected virtual void ConfigureInitializeSsl(IApplicationBuilder app, IWebHostEnvironment env)
@@ -359,8 +366,13 @@ namespace thZero.AspNetCore
         {
         }
 
+        protected virtual void ConfigureServicesInitializeMvcBuilderOptionsFilters(MvcOptions options)
+        {
+            options.Filters.Add(typeof(InstrumentationActionFilter));
+        }
+
         protected virtual void ConfigureServicesInitializeMvcPost(IServiceCollection services)
-		{
+        {
             if (!string.IsNullOrEmpty(Localization))
                 services.AddLocalization(options => options.ResourcesPath = Localization);
         }
@@ -368,6 +380,13 @@ namespace thZero.AspNetCore
         protected virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services)
         {
             ServiceCollection = services;
+
+            ConfigureServicesInitializeInstrumentation(services);
+        }
+
+        protected virtual void ConfigureServicesInitializeInstrumentation(IServiceCollection services)
+        {
+            services.AddTransient<IInstrumentationPacket, DefaultInstrumentationPacket>();
         }
 
         protected virtual void ConfigureServicesInitializePost(IServiceCollection services, IWebHostEnvironment env)

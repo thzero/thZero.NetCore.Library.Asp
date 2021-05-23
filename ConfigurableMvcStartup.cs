@@ -28,37 +28,37 @@ using thZero.Configuration;
 
 namespace thZero.AspNetCore
 {
-	public abstract class ConfigurableMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail, TStartup> :
+    public abstract class ConfigurableMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail, TStartup> :
         LoggableMvcStartup<TStartup>
         where TApplicationConfiguration : Application<TApplicationConfigurationDefaults, TApplicationConfigurationEmail>, new()
-		where TApplicationConfigurationDefaults : ApplicationDefaults
-		where TApplicationConfigurationEmail : ApplicationEmail
+        where TApplicationConfigurationDefaults : ApplicationDefaults
+        where TApplicationConfigurationEmail : ApplicationEmail
         where TStartup : BaseMvcStartup
     {
-		public ConfigurableMvcStartup(string copyrightDate, IConfiguration configuration, ILogger<TStartup> logger) : base(configuration, logger)
-		{
-			Utilities.Web.General.CopyrightDate = copyrightDate;
-		}
+        public ConfigurableMvcStartup(string copyrightDate, IConfiguration configuration, ILogger<TStartup> logger) : base(configuration, logger)
+        {
+            Utilities.Web.General.CopyrightDate = copyrightDate;
+        }
 
-		#region Protected Methods
-		protected override void ConfigureInitializeServiceProvider(IServiceProvider svp)
-		{
-			base.ConfigureInitializeServiceProvider(svp);
+        #region Protected Methods
+        protected override void ConfigureInitializeServiceProvider(IServiceProvider svp)
+        {
+            base.ConfigureInitializeServiceProvider(svp);
 
-			var site = svp.GetService<IOptions<TApplicationConfiguration>>();
-			if ((site == null) || (site.Value == null))
-				throw new Exception("Invalid Application configuration.");
+            var site = svp.GetService<IOptions<TApplicationConfiguration>>();
+            if ((site == null) || (site.Value == null))
+                throw new Exception("Invalid Application configuration.");
 
-			Utilities.Web.Configuration.Application = site.Value;
-		}
+            Utilities.Web.Configuration.Application = site.Value;
+        }
 
-		protected override void ConfigureServicesInitializeMvcPost(IServiceCollection services)
-		{
-			base.ConfigureServicesInitializeMvcPost(services);
+        protected override void ConfigureServicesInitializeMvcPost(IServiceCollection services)
+        {
+            base.ConfigureServicesInitializeMvcPost(services);
 
-			// Configuration Options...
-			services.Configure<TApplicationConfiguration>(Configuration.GetSection("Application"));
-		}
-		#endregion
-	}
+            // Configuration Options...
+            services.Configure<TApplicationConfiguration>(Configuration.GetSection("Application"));
+        }
+        #endregion
+    }
 }

@@ -22,26 +22,26 @@ using System.Collections.Generic;
 
 namespace thZero.AspNetCore.Mvc
 {
-	public sealed class DeinitializeActionSuccessException : Exception
-	{
-		public DeinitializeActionSuccessException() : base(string.Empty)
-		{
-		}
+    public sealed class DeinitializeActionSuccessException : Exception
+    {
+        public DeinitializeActionSuccessException() : base(string.Empty)
+        {
+        }
 
-		#region Public Methods
-		public void Add(string error)
-		{
-			Enforce.AgainstNullOrEmpty(() => error);
+        #region Public Methods
+        public void Add(string error)
+        {
+            Enforce.AgainstNullOrEmpty(() => error);
 
-			_errors.Add(new Error() { Message = error });
-		}
+            _errors.Add(new Error() { Message = error });
+        }
 
-		public void Add(Error error)
-		{
-			Enforce.Against(() => error, () => (error.Equals(default(Error))));
+        public void Add(Error error)
+        {
+            Enforce.Against(() => error, () => (error.Equals(default(Error))));
 
-			_errors.Add(error);
-		}
+            _errors.Add(error);
+        }
         #endregion
 
         #region Public Properties
@@ -56,16 +56,16 @@ namespace thZero.AspNetCore.Mvc
 
         #region Fields
         private ICollection<Error> _errors = new List<Error>();
-		private bool _success;
-		#endregion
+        private bool _success;
+        #endregion
 
-		public struct Error
-		{
-			#region Public Properties
-			public string Key { get; set; }
-			public Exception Exception { get; set; }
-			public string Message { get; set; }
-			#endregion
-		}
-	}
+        public struct Error
+        {
+            #region Public Properties
+            public string Key { get; set; }
+            public Exception Exception { get; set; }
+            public string Message { get; set; }
+            #endregion
+        }
+    }
 }

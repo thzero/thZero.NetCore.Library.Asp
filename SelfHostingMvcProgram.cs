@@ -27,27 +27,27 @@ using Microsoft.Extensions.Logging;
 
 namespace thZero.AspNetCore
 {
-	public abstract class SelfHostingMvcProgram<TProgram, TStartup>
-		where TProgram : SelfHostingMvcProgram<TProgram, TStartup>
+    public abstract class SelfHostingMvcProgram<TProgram, TStartup>
+        where TProgram : SelfHostingMvcProgram<TProgram, TStartup>
         where TStartup : BaseMvcStartup
-	{
-		#region Public Methods
-		public static void Start(string[] args)
-		{
-			Utilities.Activator.CreateInstance<TProgram>()
-				.Initialize(args);
-		}
+    {
+        #region Public Methods
+        public static void Start(string[] args)
+        {
+            Utilities.Activator.CreateInstance<TProgram>()
+                .Initialize(args);
+        }
 
-		public void Initialize(string[] args)
-		{
-			var configuration = InitializeConfigurationBuilder(
-				new ConfigurationBuilder()
-					.AddCommandLine(args)
-				)
-				.Build();
+        public void Initialize(string[] args)
+        {
+            var configuration = InitializeConfigurationBuilder(
+                new ConfigurationBuilder()
+                    .AddCommandLine(args)
+                )
+                .Build();
 
-			var webHostBuilder = new WebHostBuilder()
-					.UseConfiguration(configuration)
+            var webHostBuilder = new WebHostBuilder()
+                    .UseConfiguration(configuration)
                     .ConfigureAppConfiguration((hostingContext, configurationBuilder) =>
                     {
                         configurationBuilder.SetBasePath(hostingContext.HostingEnvironment.ContentRootPath);
@@ -57,23 +57,23 @@ namespace thZero.AspNetCore
                     {
                         InitializeConfigureLoggingBuilder(hostingContext, loggingBuilder);
                     })
-					.UseStartup<TStartup>();
+                    .UseStartup<TStartup>();
 
-			webHostBuilder.UseKestrel(c => c.AddServerHeader = false);
+            webHostBuilder.UseKestrel(c => c.AddServerHeader = false);
 
-			InitializeWebHostBuilder(webHostBuilder);
-			InitializeContentRoot(webHostBuilder);
+            InitializeWebHostBuilder(webHostBuilder);
+            InitializeContentRoot(webHostBuilder);
 
-			webHostBuilder
-				.Build()
-				.Run();
-		}
-		#endregion
+            webHostBuilder
+                .Build()
+                .Run();
+        }
+        #endregion
 
-		#region Protected Methods
-		protected virtual IConfigurationBuilder InitializeConfigurationBuilder(IConfigurationBuilder builder)
-		{
-			return builder;
+        #region Protected Methods
+        protected virtual IConfigurationBuilder InitializeConfigurationBuilder(IConfigurationBuilder builder)
+        {
+            return builder;
         }
 
         protected virtual void InitializeConfigurationBuilder(WebHostBuilderContext hostingContext, IConfigurationBuilder configurationBuilder)
@@ -85,14 +85,14 @@ namespace thZero.AspNetCore
         }
 
         protected virtual IWebHostBuilder InitializeWebHostBuilder(IWebHostBuilder builder)
-		{
-			return builder;
-		}
+        {
+            return builder;
+        }
 
-		protected virtual void InitializeContentRoot(IWebHostBuilder builder)
-		{
-			builder.UseContentRoot(Directory.GetCurrentDirectory());
-		}
-		#endregion
-	}
+        protected virtual void InitializeContentRoot(IWebHostBuilder builder)
+        {
+            builder.UseContentRoot(Directory.GetCurrentDirectory());
+        }
+        #endregion
+    }
 }

@@ -25,29 +25,29 @@ using Newtonsoft.Json;
 
 namespace thZero.AspNetCore.Mvc
 {
-	public class JsonResultEx : JsonResult
-	{
-		public JsonResultEx(object value) : base(value)
-		{
-			if (_settings != null)
-				return;
+    public class JsonResultEx : JsonResult
+    {
+        public JsonResultEx(object value) : base(value)
+        {
+            if (_settings != null)
+                return;
 
-			lock (_lock)
-			{
-				if (_settings != null)
-					return;
+            lock (_lock)
+            {
+                if (_settings != null)
+                    return;
 
-				_settings = new JsonSerializerSettings();
-				_settings.MissingMemberHandling = MissingMemberHandling.Ignore;
-				_settings.NullValueHandling = NullValueHandling.Ignore;
-				_settings.DefaultValueHandling = DefaultValueHandling.Include;
-				_settings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
-			}
-		}
+                _settings = new JsonSerializerSettings();
+                _settings.MissingMemberHandling = MissingMemberHandling.Ignore;
+                _settings.NullValueHandling = NullValueHandling.Ignore;
+                _settings.DefaultValueHandling = DefaultValueHandling.Include;
+                _settings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+            }
+        }
 
-		#region Fields
-		private static volatile JsonSerializerSettings _settings;
-		private static readonly object _lock = new object();
-		#endregion
-	}
+        #region Fields
+        private static volatile JsonSerializerSettings _settings;
+        private static readonly object _lock = new object();
+        #endregion
+    }
 }

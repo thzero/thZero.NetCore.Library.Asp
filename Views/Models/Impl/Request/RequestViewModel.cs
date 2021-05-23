@@ -21,14 +21,14 @@ using System;
 
 namespace thZero.AspNetCore.Mvc.Views.Models
 {
-	public abstract class RequestViewModel : IViewModel
-	{
-	}
+    public abstract class RequestViewModel : IViewModel
+    {
+    }
 
-	public abstract class RequestViewModel<T> : IViewModel<T>
-	{
-		#region Public Properties
-		public T Id { get; set; }
-		#endregion
-	}
+    public abstract class RequestViewModel<T> : IViewModel<T>
+    {
+        #region Public Properties
+        public T Id { get; set; }
+        #endregion
+    }
 }

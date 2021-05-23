@@ -25,143 +25,186 @@ using Microsoft.AspNetCore.Mvc;
 
 using thZero.AspNetCore.Mvc.Views.Models;
 using thZero.AspNetCore.Results;
+using thZero.Responses;
 
 namespace thZero.AspNetCore.Mvc
 {
-	public abstract partial class BaseController<TController>
-	{
-		#region Protected Methods
-		protected ActionResult DeinitializeDeleteAction<T>(T model, Func<T, bool> methodDelete)
-			where T : IEditViewModel
-		{
-			return DeinitializeDeleteAction<T>(model, null, methodDelete, null);
-		}
+    public abstract partial class BaseController<TController>
+    {
+        #region Protected Methods
+        protected ActionResult DeinitializeDeleteAction<T>(T model, Func<T, bool> methodDelete)
+            where T : IEditViewModel
+        {
+            return DeinitializeDeleteAction<T>(model, null, methodDelete, null);
+        }
 
-		protected async Task<ActionResult> DeinitializeDeleteActionAsync<T>(T model, Func<T, Task<bool>> methodDelete)
-			where T : IEditViewModel
-		{
-			return await DeinitializeDeleteActionAsync<T>(model, null, methodDelete, null);
-		}
+        protected async Task<ActionResult> DeinitializeDeleteActionAsync<T>(T model, Func<T, Task<bool>> methodDelete)
+            where T : IEditViewModel
+        {
+            return await DeinitializeDeleteActionAsync<T>(model, null, methodDelete, null);
+        }
 
-		protected ActionResult DeinitializeDeleteAction<T>(T model, Func<T, bool> methodValidate, Func<T, bool> methodDelete)
-			where T : IEditViewModel
-		{
-			return DeinitializeDeleteAction<T>(model, methodValidate, methodDelete, null);
-		}
+        protected ActionResult DeinitializeDeleteAction<T>(T model, Func<T, bool> methodValidate, Func<T, bool> methodDelete)
+            where T : IEditViewModel
+        {
+            return DeinitializeDeleteAction<T>(model, methodValidate, methodDelete, null);
+        }
 
-		protected async Task<ActionResult> DeinitializeDeleteActionAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<bool>> methodDelete)
-			where T : IEditViewModel
-		{
-			return await DeinitializeDeleteActionAsync<T>(model, methodValidate, methodDelete, null);
-		}
+        protected async Task<ActionResult> DeinitializeDeleteActionAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<bool>> methodDelete)
+            where T : IEditViewModel
+        {
+            return await DeinitializeDeleteActionAsync<T>(model, methodValidate, methodDelete, null);
+        }
 
-		protected ActionResult DeinitializeDeleteAction<T>(T model, Func<T, bool> methodValidate, Func<T, bool> methodDelete, string view)
-			where T : IEditViewModel
-		{
-			const string Declaration = "DeinitializeDeleteAction";
+        protected ActionResult DeinitializeDeleteAction<T>(T model, Func<T, bool> methodValidate, Func<T, bool> methodDelete, string view)
+            where T : IEditViewModel
+        {
+            const string Declaration = "DeinitializeDeleteAction";
 
-			Enforce.AgainstNull(() => methodDelete);
+            Enforce.AgainstNull(() => methodDelete);
 
-			bool isPost = Request.IsPostRequest();
+            bool isPost = Request.IsPostRequest();
 
-			try
-			{
-				if (ModelState.IsValid)
-				{
-					if ((methodValidate != null) && !methodValidate(model))
-						return (isPost ? JsonPostFailure() : JsonGetFailure());
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if ((methodValidate != null) && !methodValidate(model))
+                        return (isPost ? JsonPostFailure() : JsonGetFailure());
 
-					if (methodDelete(model) && (Request.IsAjaxRequest()))
-						return (isPost ? JsonPost() : JsonGet());
+                    if (methodDelete(model) && (Request.IsAjaxRequest()))
+                        return (isPost ? JsonPost() : JsonGet());
 
-					if (Request.IsAjaxRequest())
-						return (isPost ? JsonPostFailure() : JsonGetFailure());
+                    if (Request.IsAjaxRequest())
+                        return (isPost ? JsonPostFailure() : JsonGetFailure());
 
-					return View(view);
-				}
+                    return View(view);
+                }
 
-				TempData.Keep();
+                TempData.Keep();
 
-				var allErrors = ModelState.Values.SelectMany(v => v.Errors);
-				if (Request.IsAjaxRequest())
-				{
-					if (isPost)
-					{
-						SubmitResult results = new SubmitResult();
+                var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                if (Request.IsAjaxRequest())
+                {
+                    if (isPost)
+                    {
+                        SubmitResult results = new SubmitResult();
 
-						foreach (var error in allErrors)
-							results.AddError(error.ErrorMessage);
+                        foreach (var error in allErrors)
+                            results.AddError(error.ErrorMessage);
 
-						return JsonPostFailure(results);
-					}
+                        return JsonPostFailure(results);
+                    }
 
-					return JsonGetFailure();
-				}
+                    return JsonGetFailure();
+                }
 
-				throw new InvalidFailureException(InvalidFailureResult);
-			}
-			catch (Exception ex)
-			{
-				Logger?.LogError(Declaration, ex);
-				if (Request.IsAjaxRequest())
-					return (isPost ? JsonPostFailure() : JsonGetFailure());
-				throw;
-			}
-		}
+                throw new InvalidFailureException(InvalidFailureResult);
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(Declaration, ex);
+                if (Request.IsAjaxRequest())
+                    return (isPost ? JsonPostFailure() : JsonGetFailure());
+                throw;
+            }
+        }
 
-		protected async Task<ActionResult> DeinitializeDeleteActionAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<bool>> methodDelete, string view)
-			where T : IEditViewModel
-		{
-			const string Declaration = "DeinitializeDeleteAction";
+        protected async Task<ActionResult> DeinitializeDeleteActionAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<bool>> methodDelete, string view)
+            where T : IEditViewModel
+        {
+            const string Declaration = "DeinitializeDeleteAction";
 
-			Enforce.AgainstNull(() => methodDelete);
+            Enforce.AgainstNull(() => methodDelete);
 
-			bool isPost = Request.IsPostRequest();
+            bool isPost = Request.IsPostRequest();
 
-			try
-			{
-				if (ModelState.IsValid)
-				{
-					if ((methodValidate != null) && !await methodValidate(model))
-						return await Task.FromResult((isPost ? JsonPostFailure() : JsonGetFailure()));
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if ((methodValidate != null) && !await methodValidate(model))
+                        return await Task.FromResult((isPost ? JsonPostFailure() : JsonGetFailure()));
 
-					if ((await methodDelete(model)) && Request.IsAjaxRequest())
-						return await Task.FromResult(JsonPost());
+                    if ((await methodDelete(model)) && Request.IsAjaxRequest())
+                        return await Task.FromResult(JsonPost());
 
-					if (Request.IsAjaxRequest())
-						return await Task.FromResult((isPost ? JsonPostFailure() : JsonGetFailure()));
+                    if (Request.IsAjaxRequest())
+                        return await Task.FromResult((isPost ? JsonPostFailure() : JsonGetFailure()));
 
-					return View(view);
-				}
+                    return View(view);
+                }
 
-				TempData.Keep();
+                TempData.Keep();
 
-				var allErrors = ModelState.Values.SelectMany(v => v.Errors);
-				if (Request.IsAjaxRequest())
-				{
-					if (isPost)
-					{
-						SubmitResult results = new SubmitResult();
+                var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                if (Request.IsAjaxRequest())
+                {
+                    if (isPost)
+                    {
+                        SubmitResult results = new SubmitResult();
 
-						foreach (var error in allErrors)
-							results.AddError(error.ErrorMessage);
+                        foreach (var error in allErrors)
+                            results.AddError(error.ErrorMessage);
 
-						return await Task.FromResult(JsonPostFailure(results));
-					}
+                        return await Task.FromResult(JsonPostFailure(results));
+                    }
 
-					return await Task.FromResult(JsonPostFailure());
-				}
+                    return await Task.FromResult(JsonPostFailure());
+                }
 
-				throw new InvalidFailureException(InvalidFailureResult);
-			}
-			catch (Exception ex)
-			{
-				Logger?.LogError(Declaration, ex);
-				if (Request.IsAjaxRequest())
-					return await Task.FromResult((isPost ? JsonPostFailure() : JsonGetFailure()));
-				throw;
-			}
-		}
-		#endregion
-	}
+                throw new InvalidFailureException(InvalidFailureResult);
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(Declaration, ex);
+                if (Request.IsAjaxRequest())
+                    return await Task.FromResult((isPost ? JsonPostFailure() : JsonGetFailure()));
+                throw;
+            }
+        }
+
+        protected JsonResult JsonDelete(object data)
+        {
+            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Data = data });
+        }
+
+        protected JsonResult JsonViewDelete(object data)
+        {
+            return new JsonResultEx(new JsonOutputResponseViewModel<object>() { Success = true, Data = data });
+        }
+
+        protected JsonResult JsonDelete<T>(T data)
+            where T : class
+        {
+            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Data = data });
+        }
+
+        protected JsonResult JsonViewDelete<T>(T data)
+            where T : class
+        {
+            return new JsonResultEx(new JsonOutputResponseViewModel<T>() { Success = true, Data = data });
+        }
+
+        protected virtual JsonResult JsonDeleteFailure(string message)
+        {
+            return new JsonResultEx((new ErrorResponse()).AddError(message));
+        }
+
+        protected virtual JsonResult JsonViewDeleteFailure(string message)
+        {
+            return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddError(message));
+        }
+
+        protected virtual JsonResult JsonDeleteFailure()
+        {
+            return new JsonResultEx(new ErrorResponse());
+        }
+
+        protected virtual JsonResult JsonViewDeleteFailure()
+        {
+            return new JsonResultEx(new JsonOutputErrorResponseViewModel());
+        }
+        #endregion
+    }
 }

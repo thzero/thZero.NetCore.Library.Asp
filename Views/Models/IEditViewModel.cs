@@ -21,15 +21,15 @@ using System;
 
 namespace thZero.AspNetCore.Mvc.Views.Models
 {
-	public interface IEditViewModel : IViewModel
-	{
-		#region Properties
-		string Action { get; set; }
-		Guid CorrelationKey { get; set; }
-		#endregion
-	}
+    public interface IEditViewModel : IViewModel
+    {
+        #region Properties
+        string Action { get; set; }
+        Guid CorrelationKey { get; set; }
+        #endregion
+    }
 
-	public interface IEditViewModel<T> : IEditViewModel, IViewModel<T>
-	{
-	}
+    public interface IEditViewModel<T> : IEditViewModel, IViewModel<T>
+    {
+    }
 }

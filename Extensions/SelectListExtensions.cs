@@ -25,107 +25,107 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace thZero
 {
-	public static class SelectListExtensions
-	{
-		#region Public Methods
-		public static IEnumerable<SelectListItemEx> ToSelectListAsEnumerable<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector)
-		{
-			return items.ToSelectListAsEnumerable(valueSelector, nameSelector, x => false);
-		}
+    public static class SelectListExtensions
+    {
+        #region Public Methods
+        public static IEnumerable<SelectListItemEx> ToSelectListAsEnumerable<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector)
+        {
+            return items.ToSelectListAsEnumerable(valueSelector, nameSelector, x => false);
+        }
 
-		public static IEnumerable<SelectListItemEx> ToSelectListAsEnumerable<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, IEnumerable<TValue> selectedItems)
-		{
-			return items.ToSelectListAsEnumerable(valueSelector, nameSelector, x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
-		}
+        public static IEnumerable<SelectListItemEx> ToSelectListAsEnumerable<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, IEnumerable<TValue> selectedItems)
+        {
+            return items.ToSelectListAsEnumerable(valueSelector, nameSelector, x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
+        }
 
-		public static IEnumerable<SelectListItemEx> ToSelectListAsEnumerable<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, bool> selectedValueSelector)
-		{
-			Enforce.AgainstNull(() => (items));
-			Enforce.AgainstNull(() => (valueSelector));
-			Enforce.AgainstNull(() => (nameSelector));
-			Enforce.AgainstNull(() => (selectedValueSelector));
+        public static IEnumerable<SelectListItemEx> ToSelectListAsEnumerable<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, bool> selectedValueSelector)
+        {
+            Enforce.AgainstNull(() => (items));
+            Enforce.AgainstNull(() => (valueSelector));
+            Enforce.AgainstNull(() => (nameSelector));
+            Enforce.AgainstNull(() => (selectedValueSelector));
 
-			foreach (var item in items)
-			{
-				yield return new SelectListItemEx
-				{
-					Text = nameSelector(item),
-					Value = valueSelector(item).ToString(),
-					Selected = selectedValueSelector(item)
-				};
-			}
-		}
+            foreach (var item in items)
+            {
+                yield return new SelectListItemEx
+                {
+                    Text = nameSelector(item),
+                    Value = valueSelector(item).ToString(),
+                    Selected = selectedValueSelector(item)
+                };
+            }
+        }
 
-		public static ICollection<SelectListItemEx> ToSelectListAsCollection<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector)
-		{
-			return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => false);
-		}
+        public static ICollection<SelectListItemEx> ToSelectListAsCollection<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector)
+        {
+            return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => false);
+        }
 
-		public static ICollection<SelectListItemEx> ToSelectListAsCollection<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, IEnumerable<TValue> selectedItems)
-		{
-			return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
-		}
+        public static ICollection<SelectListItemEx> ToSelectListAsCollection<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, IEnumerable<TValue> selectedItems)
+        {
+            return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
+        }
 
-		public static ICollection<SelectListItemEx> ToSelectListAsCollection<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, bool> selectedValueSelector)
-		{
-			return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), selectedValueSelector);
-		}
+        public static ICollection<SelectListItemEx> ToSelectListAsCollection<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, bool> selectedValueSelector)
+        {
+            return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), selectedValueSelector);
+        }
 
-		public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector)
-		{
-			return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => false);
-		}
+        public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector)
+        {
+            return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => false);
+        }
 
-		public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, TValue> relatedValueSelector)
-		{
-			return ToSelectListCore(items, valueSelector, nameSelector, relatedValueSelector, x => false);
-		}
+        public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, TValue> relatedValueSelector)
+        {
+            return ToSelectListCore(items, valueSelector, nameSelector, relatedValueSelector, x => false);
+        }
 
-		public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, IEnumerable<TValue> selectedItems)
-		{
-			return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
-		}
+        public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, IEnumerable<TValue> selectedItems)
+        {
+            return ToSelectListCore(items, valueSelector, nameSelector, x => default(TValue), x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
+        }
 
-		public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, TValue> relatedValueSelector, IEnumerable<TValue> selectedItems)
-		{
-			return ToSelectListCore(items, valueSelector, nameSelector, relatedValueSelector, x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
-		}
+        public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, TValue> relatedValueSelector, IEnumerable<TValue> selectedItems)
+        {
+            return ToSelectListCore(items, valueSelector, nameSelector, relatedValueSelector, x => selectedItems != null && selectedItems.Contains(valueSelector(x)));
+        }
 
-		public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, TValue> relatedValueSelector, Func<TItem, bool> selectedValueSelector)
-		{
-			return ToSelectListCore(items, valueSelector, nameSelector, relatedValueSelector, selectedValueSelector);
-		}
-		#endregion
+        public static List<SelectListItemEx> ToSelectList<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, TValue> relatedValueSelector, Func<TItem, bool> selectedValueSelector)
+        {
+            return ToSelectListCore(items, valueSelector, nameSelector, relatedValueSelector, selectedValueSelector);
+        }
+        #endregion
 
-		#region Private Methods
-		private static List<SelectListItemEx> ToSelectListCore<TItem, TValue>(IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, TValue> relatedValueSelector, Func<TItem, bool> selectedValueSelector)
-		{
-			Enforce.AgainstNull(() => (items));
-			Enforce.AgainstNull(() => (valueSelector));
-			Enforce.AgainstNull(() => (nameSelector));
-			Enforce.AgainstNull(() => (selectedValueSelector));
-			Enforce.AgainstNull(() => (relatedValueSelector));
+        #region Private Methods
+        private static List<SelectListItemEx> ToSelectListCore<TItem, TValue>(IEnumerable<TItem> items, Func<TItem, TValue> valueSelector, Func<TItem, string> nameSelector, Func<TItem, TValue> relatedValueSelector, Func<TItem, bool> selectedValueSelector)
+        {
+            Enforce.AgainstNull(() => (items));
+            Enforce.AgainstNull(() => (valueSelector));
+            Enforce.AgainstNull(() => (nameSelector));
+            Enforce.AgainstNull(() => (selectedValueSelector));
+            Enforce.AgainstNull(() => (relatedValueSelector));
 
-			List<SelectListItemEx> list = new List<SelectListItemEx>();
+            List<SelectListItemEx> list = new List<SelectListItemEx>();
 
-			foreach (var item in items)
-			{
-				list.Add(new SelectListItemEx
-				{
-					Text = nameSelector(item),
-					Value = valueSelector(item).ToString(),
-					Selected = selectedValueSelector(item),
-					Related = relatedValueSelector(item).ToString()
-				});
-			}
+            foreach (var item in items)
+            {
+                list.Add(new SelectListItemEx
+                {
+                    Text = nameSelector(item),
+                    Value = valueSelector(item).ToString(),
+                    Selected = selectedValueSelector(item),
+                    Related = relatedValueSelector(item).ToString()
+                });
+            }
 
-			return list;
-		}
-		#endregion
-	}
+            return list;
+        }
+        #endregion
+    }
 
-	public class SelectListItemEx : SelectListItem
-	{
-		public string Related { get; set; }
-	}
+    public class SelectListItemEx : SelectListItem
+    {
+        public string Related { get; set; }
+    }
 }

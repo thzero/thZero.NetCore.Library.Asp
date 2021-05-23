@@ -25,13 +25,13 @@ using Microsoft.AspNetCore.Routing;
 
 namespace thZero.AspNetCore
 {
-	public sealed class ActionAjaxAttribute : ActionMethodSelectorAttribute
-	{
-		public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
-		{
-			Enforce.AgainstNull(() => routeContext);
+    public sealed class ActionAjaxAttribute : ActionMethodSelectorAttribute
+    {
+        public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
+        {
+            Enforce.AgainstNull(() => routeContext);
 
-			return routeContext.HttpContext.Request.IsAjaxRequest();
-		}
-	}
+            return routeContext.HttpContext.Request.IsAjaxRequest();
+        }
+    }
 }

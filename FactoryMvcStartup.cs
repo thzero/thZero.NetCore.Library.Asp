@@ -32,29 +32,29 @@ namespace thZero.AspNetCore
 {
     [Obsolete("FactoryMvcStartup is deprecated, please use FactoryStartupExtension instead.")]
     public abstract class FactoryMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail, TStartup> :
-		ConfigurableMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail, TStartup>
+        ConfigurableMvcStartup<TApplicationConfiguration, TApplicationConfigurationDefaults, TApplicationConfigurationEmail, TStartup>
         where TApplicationConfiguration : Application<TApplicationConfigurationDefaults, TApplicationConfigurationEmail>, new()
-		where TApplicationConfigurationDefaults : ApplicationDefaults
-		where TApplicationConfigurationEmail : ApplicationEmail
+        where TApplicationConfigurationDefaults : ApplicationDefaults
+        where TApplicationConfigurationEmail : ApplicationEmail
         where TStartup : BaseMvcStartup
     {
-		public FactoryMvcStartup(string copyrightDate, IConfiguration configuration, ILogger<TStartup> logger) : base(copyrightDate, configuration, logger)
+        public FactoryMvcStartup(string copyrightDate, IConfiguration configuration, ILogger<TStartup> logger) : base(copyrightDate, configuration, logger)
         {
-		}
+        }
 
-		#region Public Methods
-		public override void ConfigureServices(IServiceCollection services)
-		{
-			InitializeFactory();
+        #region Public Methods
+        public override void ConfigureServices(IServiceCollection services)
+        {
+            InitializeFactory();
 
-			base.ConfigureServices(services);
-		}
-		#endregion
+            base.ConfigureServices(services);
+        }
+        #endregion
 
-		#region Protected Methods
-		protected override void ConfigureInitialize(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
-		{
-			base.ConfigureInitialize(app, env, loggerFactory, svp);
+        #region Protected Methods
+        protected override void ConfigureInitialize(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        {
+            base.ConfigureInitialize(app, env, loggerFactory, svp);
 
             ConfigureInitializeFactoryLoggerFactory(svp, loggerFactory);
             ConfigureInitializeFactory(svp);
@@ -70,40 +70,40 @@ namespace thZero.AspNetCore
         }
 
         protected override void ConfigureServicesInitializeMvcPost(IServiceCollection services)
-		{
-			base.ConfigureServicesInitializeMvcPost(services);
+        {
+            base.ConfigureServicesInitializeMvcPost(services);
 
-			Factory.Instance.AddSingleton<IServiceVersionInformation, ServiceVersionInformation>();
+            Factory.Instance.AddSingleton<IServiceVersionInformation, ServiceVersionInformation>();
 
-			ConfigureServicesInitializeFactory(services);
-		}
+            ConfigureServicesInitializeFactory(services);
+        }
 
-		protected virtual void ConfigureServicesInitializeFactory(IServiceCollection services)
-		{
-		}
-		#endregion
+        protected virtual void ConfigureServicesInitializeFactory(IServiceCollection services)
+        {
+        }
+        #endregion
 
-		#region Private Methods
-		private void InitializeFactory()
-		{
-			if (_initialized)
-				return;
+        #region Private Methods
+        private void InitializeFactory()
+        {
+            if (_initialized)
+                return;
 
-			lock (_lock)
-			{
-				if (_initialized)
-					return;
+            lock (_lock)
+            {
+                if (_initialized)
+                    return;
 
-				Factory.InitializeByAttribute(GetType());
+                Factory.InitializeByAttribute(GetType());
 
-				_initialized = true;
-			}
-		}
-		#endregion
+                _initialized = true;
+            }
+        }
+        #endregion
 
-		#region Fields
-		private static volatile bool _initialized = false;
-		private static readonly object _lock = new object();
-		#endregion
-	}
+        #region Fields
+        private static volatile bool _initialized = false;
+        private static readonly object _lock = new object();
+        #endregion
+    }
 }

@@ -23,42 +23,55 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
+using thZero.AspNetCore.Filters.Instrumentation;
+using thZero.Instrumentation;
+
 namespace thZero.AspNetCore.Mvc
 {
-	public abstract partial class BaseController : Controller
-	{
-		#region Protected Methods
-		protected bool IsAjax()
-		{
-			return Request.IsAjaxRequest();
-		}
+    public abstract partial class BaseController : Controller
+    {
+        #region Protected Methods
+        protected bool IsAjax()
+        {
+            return Request.IsAjaxRequest();
+        }
 
         protected bool Validate(params bool[] values)
-		{
-			if (values == null)
-				return false;
+        {
+            if (values == null)
+                return false;
 
-			return (!values.Any(l => l == false));
-		}
-		#endregion
+            return (!values.Any(l => l == false));
+        }
+        #endregion
 
-		#region Constants
-		protected const string InvalidCorrelationKey = "Invalid correlation key.";
-		protected const string InvalidCorrelationKeyFormat = "Correlation key '{0}' does not match key '{1}'.";
-		protected const string InvalidFailureResult = "This was not an ajax request and no IActionResult was supplied.";
-		#endregion
-	}
+        #region Protected Properties
+        protected IInstrumentationPacket Instrumentation
+        {
+            get
+            {
+                return (IInstrumentationPacket)HttpContext.Items[InstrumentationActionFilter.KeyInstrumentation];
+            }
+        }
+        #endregion
 
-	public abstract partial class BaseController<TController> : BaseController
-		where TController : BaseController
-	{
-		protected BaseController(ILogger<TController> logger)
-		{
-			Logger = logger;
-		}
+        #region Constants
+        protected const string InvalidCorrelationKey = "Invalid correlation key.";
+        protected const string InvalidCorrelationKeyFormat = "Correlation key '{0}' does not match key '{1}'.";
+        protected const string InvalidFailureResult = "This was not an ajax request and no IActionResult was supplied.";
+        #endregion
+    }
 
-		#region Protected Properties
-		protected ILogger<TController> Logger { get; }
-		#endregion
-	}
+    public abstract partial class BaseController<TController> : BaseController
+        where TController : BaseController
+    {
+        protected BaseController(ILogger<TController> logger)
+        {
+            Logger = logger;
+        }
+
+        #region Protected Properties
+        protected ILogger<TController> Logger { get; }
+        #endregion
+    }
 }

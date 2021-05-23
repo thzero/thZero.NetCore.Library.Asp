@@ -21,14 +21,14 @@ using System;
 
 namespace thZero.AspNetCore.Mvc.Views.Models
 {
-	public interface IViewModel
-	{
-	}
+    public interface IViewModel
+    {
+    }
 
-	public interface IViewModel<T> : IViewModel
-	{
-		#region Properties
-		T Id { get; set; }
-		#endregion
-	}
+    public interface IViewModel<T> : IViewModel
+    {
+        #region Properties
+        T Id { get; set; }
+        #endregion
+    }
 }

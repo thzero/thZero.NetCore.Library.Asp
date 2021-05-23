@@ -1,5 +1,5 @@
 ﻿/* ------------------------------------------------------------------------- *
-thZero.NetCore.Library.Asp
+thZero.NetCore.Library
 Copyright (C) 2016-2021 thZero.com
 
 <development [at] thzero [dot] com>
@@ -19,20 +19,10 @@ limitations under the License.
 
 using System;
 
-namespace thZero.Configuration
+namespace thZero.Instrumentation
 {
-    public class AuthorizationWebApplication<TDefaults, TEmail, TAuthorization> : WebApplication<TDefaults, TEmail>
-        where TDefaults : ApplicationDefaults
-        where TEmail : ApplicationEmail
-        where TAuthorization : class
+    public sealed class DefaultInstrumentationPacket : IInstrumentationPacket
     {
-        public AuthorizationWebApplication()
-        {
-            Authorization = Utilities.Activator.CreateInstanceEx<TAuthorization>();
-        }
-
-        #region Public Properties
-        public TAuthorization Authorization { get; set; }
-        #endregion
+        public Guid Correlation { get; set; }
     }
 }

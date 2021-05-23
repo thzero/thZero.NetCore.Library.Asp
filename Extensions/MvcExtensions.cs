@@ -29,111 +29,111 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace thZero
 {
-	public static class MvcExtensions
-	{
-		#region Public Methods
-		public static HtmlString ClientMarshall(this IHtmlHelper html, string name, IDictionary<string, object> htmlAttributes)
-		{
-			Enforce.AgainstNull(() => html);
-			Enforce.AgainstNullOrEmpty(() => name);
+    public static class MvcExtensions
+    {
+        #region Public Methods
+        public static HtmlString ClientMarshall(this IHtmlHelper html, string name, IDictionary<string, object> htmlAttributes)
+        {
+            Enforce.AgainstNull(() => html);
+            Enforce.AgainstNullOrEmpty(() => name);
 
-			if (htmlAttributes == null)
-				return new HtmlString(string.Empty);
+            if (htmlAttributes == null)
+                return new HtmlString(string.Empty);
 
-			htmlAttributes.Add(Style, StyleDisplayNone);
+            htmlAttributes.Add(Style, StyleDisplayNone);
 
-			TagBuilder tagBuilder = new TagBuilder(TagDiv);
-			tagBuilder.GenerateId(name, string.Empty);
-			tagBuilder.MergeAttributes(htmlAttributes, true);
+            TagBuilder tagBuilder = new TagBuilder(TagDiv);
+            tagBuilder.GenerateId(name, string.Empty);
+            tagBuilder.MergeAttributes(htmlAttributes, true);
 
-			StringBuilder result = new StringBuilder();
-			using (var writer = new StringWriter())
-			{
-				tagBuilder.WriteTo(writer, HtmlEncoder.Default);
-				result.Append(writer.ToString());
-			}
-			return new HtmlString(result.ToString());
-		}
+            StringBuilder result = new StringBuilder();
+            using (var writer = new StringWriter())
+            {
+                tagBuilder.WriteTo(writer, HtmlEncoder.Default);
+                result.Append(writer.ToString());
+            }
+            return new HtmlString(result.ToString());
+        }
 
-		#region Actions
-		public static string ActionUrl(this IUrlHelper urlHelper, string actionName, string controllerName)
-		{
-			return ActionUrl(urlHelper, actionName, controllerName, true, null);
-		}
+        #region Actions
+        public static string ActionUrl(this IUrlHelper urlHelper, string actionName, string controllerName)
+        {
+            return ActionUrl(urlHelper, actionName, controllerName, true, null);
+        }
 
-		public static string ActionUrl(this IUrlHelper urlHelper, string actionName, string controllerName, object routeValues)
-		{
-			return ActionUrl(urlHelper, actionName, controllerName, true, routeValues);
-		}
+        public static string ActionUrl(this IUrlHelper urlHelper, string actionName, string controllerName, object routeValues)
+        {
+            return ActionUrl(urlHelper, actionName, controllerName, true, routeValues);
+        }
 
-		public static string ActionUrl(this IUrlHelper urlHelper, string actionName, string controllerName, bool relative, object routeValues)
-		{
-			Enforce.AgainstNull(() => urlHelper);
+        public static string ActionUrl(this IUrlHelper urlHelper, string actionName, string controllerName, bool relative, object routeValues)
+        {
+            Enforce.AgainstNull(() => urlHelper);
 
-			string url = string.Empty;
-			string urlBase = string.Concat(urlHelper.ActionContext.HttpContext.Request.Scheme, SeparatorUri, urlHelper.ActionContext.HttpContext.Request.Host.Value, urlHelper.ActionContext.HttpContext.Request.PathBase.Value);
-			string urlFull = string.Concat(urlHelper.ActionContext.HttpContext.Request.Scheme, SeparatorUri, urlHelper.ActionContext.HttpContext.Request.Host.Value, urlHelper.ActionContext.HttpContext.Request.Path.Value);
+            string url = string.Empty;
+            string urlBase = string.Concat(urlHelper.ActionContext.HttpContext.Request.Scheme, SeparatorUri, urlHelper.ActionContext.HttpContext.Request.Host.Value, urlHelper.ActionContext.HttpContext.Request.PathBase.Value);
+            string urlFull = string.Concat(urlHelper.ActionContext.HttpContext.Request.Scheme, SeparatorUri, urlHelper.ActionContext.HttpContext.Request.Host.Value, urlHelper.ActionContext.HttpContext.Request.Path.Value);
 
-			if (string.IsNullOrEmpty(actionName))
-			{
-				if (relative)
-					return urlHelper.ActionContext.HttpContext.Request.Path.Value;
+            if (string.IsNullOrEmpty(actionName))
+            {
+                if (relative)
+                    return urlHelper.ActionContext.HttpContext.Request.Path.Value;
 
-				url = urlFull;
-			}
-			else if (string.IsNullOrEmpty(controllerName))
-			{
-				Uri uri = new Uri(string.Concat(urlBase, urlHelper.Action(actionName)));
-				if (relative)
-					return uri.AbsolutePath;
+                url = urlFull;
+            }
+            else if (string.IsNullOrEmpty(controllerName))
+            {
+                Uri uri = new Uri(string.Concat(urlBase, urlHelper.Action(actionName)));
+                if (relative)
+                    return uri.AbsolutePath;
 
-				url = uri.AbsoluteUri;
-			}
+                url = uri.AbsoluteUri;
+            }
 
-			if (string.IsNullOrEmpty(url))
-			{
-				Uri uri = new Uri(string.Concat(urlBase, urlHelper.Action(actionName, controllerName, routeValues)));
-				url = (relative ? uri.AbsolutePath : uri.AbsoluteUri);
-			}
+            if (string.IsNullOrEmpty(url))
+            {
+                Uri uri = new Uri(string.Concat(urlBase, urlHelper.Action(actionName, controllerName, routeValues)));
+                url = (relative ? uri.AbsolutePath : uri.AbsoluteUri);
+            }
 
-			return url;
-		}
+            return url;
+        }
 
-		public static string ActionUrlWithId(this IUrlHelper urlHelper, string controllerName)
-		{
-			return ActionUrlWithId(urlHelper, controllerName, -1);
-		}
+        public static string ActionUrlWithId(this IUrlHelper urlHelper, string controllerName)
+        {
+            return ActionUrlWithId(urlHelper, controllerName, -1);
+        }
 
-		public static string ActionUrlWithId(this IUrlHelper urlHelper, string controllerName, int id)
-		{
-			return ActionUrl(urlHelper, Constants.Controller.Action.Index, controllerName, new { id = id });
-		}
+        public static string ActionUrlWithId(this IUrlHelper urlHelper, string controllerName, int id)
+        {
+            return ActionUrl(urlHelper, Constants.Controller.Action.Index, controllerName, new { id = id });
+        }
 
-		public static string ActionUrlWithId(this IUrlHelper urlHelper, string actionName, string controllerName, int id)
-		{
-			return ActionUrl(urlHelper, actionName, controllerName, new { id = id });
-		}
+        public static string ActionUrlWithId(this IUrlHelper urlHelper, string actionName, string controllerName, int id)
+        {
+            return ActionUrl(urlHelper, actionName, controllerName, new { id = id });
+        }
 
-		public static string ActionUrlWithId(this IUrlHelper urlHelper, string controllerName, Guid? id)
-		{
-			id = (id.HasValue ? id : Guid.Empty);
-			return ActionUrl(urlHelper, Constants.Controller.Action.Index, controllerName, new { id = id });
-		}
+        public static string ActionUrlWithId(this IUrlHelper urlHelper, string controllerName, Guid? id)
+        {
+            id = (id.HasValue ? id : Guid.Empty);
+            return ActionUrl(urlHelper, Constants.Controller.Action.Index, controllerName, new { id = id });
+        }
 
-		public static string ActionUrlWithId(this IUrlHelper urlHelper, string actionName, string controllerName, Guid? id)
-		{
-			id = (id.HasValue ? id : Guid.Empty);
-			return ActionUrl(urlHelper, actionName, controllerName, new { id = id });
-		}
-		#endregion
+        public static string ActionUrlWithId(this IUrlHelper urlHelper, string actionName, string controllerName, Guid? id)
+        {
+            id = (id.HasValue ? id : Guid.Empty);
+            return ActionUrl(urlHelper, actionName, controllerName, new { id = id });
+        }
+        #endregion
 
-		#endregion
+        #endregion
 
-		#region Constants
-		private const string SeparatorUri = "://";
-		private const string Style = "style";
-		private const string StyleDisplayNone = "display: none;";
-		private const string TagDiv = "div";
-		#endregion
-	}
+        #region Constants
+        private const string SeparatorUri = "://";
+        private const string Style = "style";
+        private const string StyleDisplayNone = "display: none;";
+        private const string TagDiv = "div";
+        #endregion
+    }
 }

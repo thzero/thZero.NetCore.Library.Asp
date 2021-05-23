@@ -23,29 +23,29 @@ using Microsoft.AspNetCore.Http;
 
 namespace thZero.AspNetCore
 {
-	public static class Extensions
-	{
-		#region Public Methods
-		public static bool IsAjaxRequest(this HttpRequest request)
-		{
-			Enforce.AgainstNull(() => request);
-			Enforce.AgainstNull(() => request.Headers);
+    public static class Extensions
+    {
+        #region Public Methods
+        public static bool IsAjaxRequest(this HttpRequest request)
+        {
+            Enforce.AgainstNull(() => request);
+            Enforce.AgainstNull(() => request.Headers);
 
-			return RequestAjax.EqualsIgnore(request.Headers[RequestAjaxValue]);
-		}
+            return RequestAjax.EqualsIgnore(request.Headers[RequestAjaxValue]);
+        }
 
-		public static bool IsPostRequest(this HttpRequest request)
-		{
-			Enforce.AgainstNull(() => request);
+        public static bool IsPostRequest(this HttpRequest request)
+        {
+            Enforce.AgainstNull(() => request);
 
-			return RequestPost.EqualsIgnore(request.Method);
-		}
-		#endregion
+            return RequestPost.EqualsIgnore(request.Method);
+        }
+        #endregion
 
-		#region Constants
-		private const string RequestAjax = "XMLHttpRequest";
-		private const string RequestAjaxValue = "X-Requested-With";
-		private const string RequestPost = "POST";
-		#endregion
-	}
+        #region Constants
+        private const string RequestAjax = "XMLHttpRequest";
+        private const string RequestAjaxValue = "X-Requested-With";
+        private const string RequestPost = "POST";
+        #endregion
+    }
 }

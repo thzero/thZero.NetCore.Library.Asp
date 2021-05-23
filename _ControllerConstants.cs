@@ -22,10 +22,10 @@ using System;
 namespace thZero.Constants.Controller
 {
     public static class Action
-	{
-		public const string Blank = "Blank";
-		public const string Index = "Index";
-	}
+    {
+        public const string Blank = "Blank";
+        public const string Index = "Index";
+    }
 
     public static class Home
     {
@@ -35,8 +35,8 @@ namespace thZero.Constants.Controller
 
 namespace thZero.Constants.View
 {
-	public static class General
-	{
-		public const string Index = Controller.Action.Index;
-	}
+    public static class General
+    {
+        public const string Index = Controller.Action.Index;
+    }
 }

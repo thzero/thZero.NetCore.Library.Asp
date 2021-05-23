@@ -21,8 +21,8 @@ using System;
 
 namespace thZero.AspNetCore.Constants
 {
-	public static class CRUD
-	{
-		public const string KeyCorrelation = "KeyCorrelation";
-	}
+    public static class CRUD
+    {
+        public const string KeyCorrelation = "KeyCorrelation";
+    }
 }
