@@ -30,7 +30,7 @@ namespace thZero.AspNetCore.Mvc.Views.Models
         #region Public Methods
         public JsonResponseViewModel AddError(string message, params object[] args)
         {
-            if ((args != null) && (args.Count() > 0))
+            if ((args != null) && (args.Length > 0))
                 message = string.Format(message, args);
             _messages.Add(new ErrorMessage() { Message = message });
             _success = false;
@@ -39,7 +39,7 @@ namespace thZero.AspNetCore.Mvc.Views.Models
 
         public JsonResponseViewModel AddError(string inputElement, string message, params object[] args)
         {
-            if ((args != null) && (args.Count() > 0))
+            if ((args != null) && (args.Length > 0))
                 message = string.Format(message, args);
             _messages.Add(new ErrorMessage() { InputElement = inputElement, Message = message });
             _success = false;
@@ -66,7 +66,7 @@ namespace thZero.AspNetCore.Mvc.Views.Models
         #endregion
 
         #region Fields
-        private ICollection<ErrorMessage> _messages = new List<ErrorMessage>();
+        private readonly ICollection<ErrorMessage> _messages = new List<ErrorMessage>();
         private bool _success;
         #endregion
     }

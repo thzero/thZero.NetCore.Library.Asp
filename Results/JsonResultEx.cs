@@ -37,17 +37,19 @@ namespace thZero.AspNetCore.Mvc
                 if (_settings != null)
                     return;
 
-                _settings = new JsonSerializerSettings();
-                _settings.MissingMemberHandling = MissingMemberHandling.Ignore;
-                _settings.NullValueHandling = NullValueHandling.Ignore;
-                _settings.DefaultValueHandling = DefaultValueHandling.Include;
-                _settings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+                _settings = new JsonSerializerSettings
+                {
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    NullValueHandling = NullValueHandling.Ignore,
+                    DefaultValueHandling = DefaultValueHandling.Include,
+                    ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+                };
             }
         }
 
         #region Fields
         private static volatile JsonSerializerSettings _settings;
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
         #endregion
     }
 }

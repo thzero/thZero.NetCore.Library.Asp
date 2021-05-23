@@ -92,7 +92,7 @@ namespace thZero.AspNetCore
 
         #region Fields
         private static volatile bool _initialized = false;
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
         #endregion
     }
 }
