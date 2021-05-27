@@ -23,6 +23,6 @@ namespace thZero.Instrumentation
 {
     public sealed class DefaultInstrumentationPacket : IInstrumentationPacket
     {
-        public Guid Correlation { get; set; }
+        public Guid Correlation { get; set; } = Guid.NewGuid();
     }
 }

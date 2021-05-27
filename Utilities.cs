@@ -98,14 +98,14 @@ namespace thZero.Utilities.Web
         private static readonly thZero.Services.IServiceLog log = thZero.Factory.Instance.RetrieveLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         #region Public Methods
-        public static DateTime ConvertTo(DateTime date, TimeZoneInfo timeZone)
+        public static System.DateTime ConvertTo(System.DateTime date, TimeZoneInfo timeZone)
         {
             Enforce.AgainstNull(() => timeZone);
 
             return TimeZoneInfo.ConvertTime(date, timeZone);
         }
 
-        public static DateTime ConvertToDefault(DateTime date)
+        public static System.DateTime ConvertToDefault(System.DateTime date)
         {
             return TimeZoneInfo.ConvertTime(date.ToUniversalTime(), Default);
         }

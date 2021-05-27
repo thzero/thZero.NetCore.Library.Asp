@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- *
-thZero.NetCore.Library.Asp
-Copyright (C) 2016-2021 thZero.com
+thZero.Registry
+Copyright (C) 2021-2021 thZero.com
 
 <development [at] thzero [dot] com>
 
