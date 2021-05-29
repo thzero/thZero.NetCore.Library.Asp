@@ -31,9 +31,7 @@ namespace thZero.DependencyInjection
     public class ServiceScanner : IService
     {
         #region Public Methods
-#pragma warning disable CA1822 // Mark members as static
         public void RegisterAssembly(IServiceCollection services, AssemblyName assemblyName)
-#pragma warning restore CA1822 // Mark members as static
         {
             IEnumerable<DependencyAttribute> attributes;
             ServiceDescriptor descriptor;
@@ -49,9 +47,7 @@ namespace thZero.DependencyInjection
             }
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public void RequestAssembly(AssemblyName assemblyName)
-#pragma warning restore CA1822 // Mark members as static
         {
             IEnumerable<DependencyAttribute> attributes;
             ServiceScannerRequest request;
@@ -69,9 +65,7 @@ namespace thZero.DependencyInjection
             }
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public void RegisterRequests(IServiceCollection services)
-#pragma warning restore CA1822 // Mark members as static
         {
             IOrderedEnumerable<ServiceScannerRequest> ordered = _requests.OrderBy(l => l.Order);
             foreach (ServiceScannerRequest request in ordered)
