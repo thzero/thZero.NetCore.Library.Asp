@@ -175,52 +175,7 @@ namespace thZero.AspNetCore
             if (StartupExtensions != null)
                 StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcPre(services, env, Configuration));
 
-            if (MvcType == MvcTypes.Core)
-            {
-                IMvcCoreBuilder mvcBuilder = services.AddMvcCore(options =>
-                {
-                    if (StartupExtensions != null)
-                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPre(options));
-
-                    ConfigureServicesInitializeMvcBuilderOptionsFilters(options);
-                    ConfigureServicesInitializeMvcBuilderOptions(options);
-
-                    if (StartupExtensions != null)
-                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPost(options));
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
-                if (StartupExtensions != null)
-                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
-
-                ConfigureServicesInitializeMvcBuilder(mvcBuilder);
-
-                if (StartupExtensions != null)
-                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPost(mvcBuilder));
-            }
-            else
-            {
-                IMvcBuilder mvcBuilder = services.AddMvc(options =>
-                {
-                    if (StartupExtensions != null)
-                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPre(options));
-
-                    ConfigureServicesInitializeMvcBuilderOptionsFilters(options);
-                    ConfigureServicesInitializeMvcBuilderOptions(options);
-
-                    if (StartupExtensions != null)
-                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPost(options));
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
-                if (StartupExtensions != null)
-                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
-
-                ConfigureServicesInitializeMvcBuilder(mvcBuilder);
-
-                if (StartupExtensions != null)
-                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPost(mvcBuilder));
-            }
+            ConfigureServicesInitializeServerTypes(services);
 
             ConfigureServicesInitializeMvcAntiforgery(services);
 
@@ -284,7 +239,6 @@ namespace thZero.AspNetCore
 
         protected virtual void ConfigureInitializeRoutingEndpointsRouteBuilder(IEndpointRouteBuilder endpointsRouteBuilder)
         {
-            endpointsRouteBuilder.MapControllers();
         }
 
         protected virtual void ConfigureInitializeServiceProvider(IServiceProvider svp)
@@ -395,6 +349,56 @@ namespace thZero.AspNetCore
 
         protected virtual void ConfigureServicesInitializePre(IServiceCollection services, IWebHostEnvironment env)
         {
+        }
+
+        protected virtual void ConfigureServicesInitializeServerTypes(IServiceCollection services)
+        {
+            if (MvcType == MvcTypes.Core)
+            {
+                IMvcCoreBuilder mvcBuilder = services.AddMvcCore(options =>
+                {
+                    if (StartupExtensions != null)
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPre(options));
+
+                    ConfigureServicesInitializeMvcBuilderOptionsFilters(options);
+                    ConfigureServicesInitializeMvcBuilderOptions(options);
+
+                    if (StartupExtensions != null)
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPost(options));
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
+
+                ConfigureServicesInitializeMvcBuilder(mvcBuilder);
+
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPost(mvcBuilder));
+            }
+            else
+            {
+                IMvcBuilder mvcBuilder = services.AddMvc(options =>
+                {
+                    if (StartupExtensions != null)
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPre(options));
+
+                    ConfigureServicesInitializeMvcBuilderOptionsFilters(options);
+                    ConfigureServicesInitializeMvcBuilderOptions(options);
+
+                    if (StartupExtensions != null)
+                        StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPost(options));
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
+
+                ConfigureServicesInitializeMvcBuilder(mvcBuilder);
+
+                if (StartupExtensions != null)
+                    StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPost(mvcBuilder));
+            }
         }
 
         protected virtual void RegisterStartupExtension(IStartupExtension extension)
