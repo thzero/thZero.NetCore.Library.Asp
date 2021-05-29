@@ -56,11 +56,11 @@ namespace thZero.AspNetCore
         {
         }
 
-        public void ConfigureInitializeRoutingEndpointsRouteBuilderPost(IEndpointRouteBuilder endpointsRouteBuilder)
+        public virtual void ConfigureInitializeRoutingEndpointsRouteBuilderPost(IEndpointRouteBuilder endpointsRouteBuilder)
         {
         }
 
-        public void ConfigureInitializeRoutingEndpointsRouteBuilderPre(IEndpointRouteBuilder endpointsRouteBuilder)
+        public virtual void ConfigureInitializeRoutingEndpointsRouteBuilderPre(IEndpointRouteBuilder endpointsRouteBuilder)
         {
         }
 

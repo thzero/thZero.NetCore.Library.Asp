@@ -17,9 +17,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
  * ------------------------------------------------------------------------- */
 
+using System;
+
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+
 using thZero.Instrumentation;
 
 namespace thZero.AspNetCore.Filters.Instrumentation
@@ -49,7 +51,10 @@ namespace thZero.AspNetCore.Filters.Instrumentation
             if (String.IsNullOrEmpty(correlationId))
                 packet.Correlation = Guid.NewGuid();
 
-            context.HttpContext.Items.Add(KeyInstrumentation, packet);
+            if (!context.HttpContext.Items.ContainsKey(KeyInstrumentation))
+                context.HttpContext.Items.Add(KeyInstrumentation, packet);
+            else
+                context.HttpContext.Items[KeyInstrumentation] = packet;
         }
 
         public const string KeyInstrumentation = "Instrumentation";

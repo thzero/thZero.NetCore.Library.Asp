@@ -62,9 +62,11 @@ namespace thZero.AspNetCore
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // This gets called after ConfigureServices.
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup
-        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+        public virtual void Configure(IApplicationBuilder app, IHostApplicationLifetime lifetime, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
             Utilities.Services.Version.Instance.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
+
+            lifetime.ApplicationStopping.Register(OnShutdown);
 
             IServiceVersionInformation serviceVersionInformation = svp.GetService<IServiceVersionInformation>();
             serviceVersionInformation.Version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
@@ -400,6 +402,8 @@ namespace thZero.AspNetCore
                     StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPost(mvcBuilder));
             }
         }
+
+        protected virtual void OnShutdown() { }
 
         protected virtual void RegisterStartupExtension(IStartupExtension extension)
         {
