@@ -113,7 +113,7 @@ namespace thZero.AspNetCore.Mvc
         protected async Task<ActionResult> DeinitializeDeleteActionAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<bool>> methodDelete, string view)
             where T : IEditViewModel
         {
-            const string Declaration = "DeinitializeDeleteAction";
+            const string Declaration = "DeinitializeDeleteActionAsync";
 
             Enforce.AgainstNull(() => methodDelete);
 

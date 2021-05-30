@@ -654,7 +654,7 @@ namespace thZero.AspNetCore.Mvc
         protected async Task<IActionResult> InitializeInsertActionAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<bool>> methodLoad, string view)
             where T : class, IEditViewModel
         {
-            const string Declaration = "InitializeInsertAction";
+            const string Declaration = "InitializeInsertActionAsync";
 
             Enforce.AgainstNull<IEditViewModel>(() => model);
 
@@ -731,7 +731,7 @@ namespace thZero.AspNetCore.Mvc
         protected async Task<IActionResult> InitializeInsertIActionResultAsync<T>(T model, Func<T, Task<IActionResult>> methodValidate, Func<T, Task<IActionResult>> methodLoad)
             where T : class, IEditViewModel
         {
-            const string Declaration = "InitializeInsertIActionResult";
+            const string Declaration = "InitializeInsertIActionResultAsync";
 
             Enforce.AgainstNull<IEditViewModel>(() => model);
             Enforce.AgainstNull(() => methodLoad);

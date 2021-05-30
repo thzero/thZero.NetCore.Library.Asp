@@ -337,7 +337,7 @@ namespace thZero.AspNetCore.Mvc
         protected async Task<IActionResult> DeinitializeEditActionResultAsync<T>(T model, Func<T, T, Task<bool>> methodValidate, Func<T, T, SubmitResult, Task<IActionResult>> methodSuccess, Func<T, SubmitResult, Task<IActionResult>> methodFail, Func<T, SubmitResult, Task<bool>> methodDelete)
             where T : class, IEditViewModel
         {
-            const string Declaration = "DeinitializeEditActionResult";
+            const string Declaration = "DeinitializeEditActionResultAsync";
 
             Enforce.AgainstNull<IEditViewModel>(() => model);
             Enforce.AgainstNull(() => methodSuccess);
@@ -524,7 +524,7 @@ namespace thZero.AspNetCore.Mvc
         protected async Task<IActionResult> InitializeEditActionAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<bool>> methodLoad, string view)
             where T : class, IEditViewModel
         {
-            const string Declaration = "InitializeEditAction";
+            const string Declaration = "InitializeEditActionAsync";
 
             Enforce.AgainstNull<IEditViewModel>(() => model);
 
@@ -590,7 +590,7 @@ namespace thZero.AspNetCore.Mvc
         protected async Task<IActionResult> InitializeEditActionResultAsync<T>(T model, Func<T, Task<IActionResult>> methodValidate, Func<T, Task<IActionResult>> methodLoad)
             where T : class, IEditViewModel
         {
-            const string Declaration = "InitializeEditActionResult";
+            const string Declaration = "InitializeEditActionResultAsync";
 
             Enforce.AgainstNull<IEditViewModel>(() => model);
             Enforce.AgainstNull(() => methodLoad);

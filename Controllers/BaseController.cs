@@ -25,6 +25,7 @@ using Microsoft.Extensions.Logging;
 
 using thZero.AspNetCore.Filters.Instrumentation;
 using thZero.Instrumentation;
+using thZero.Responses;
 
 namespace thZero.AspNetCore.Mvc
 {
@@ -34,6 +35,47 @@ namespace thZero.AspNetCore.Mvc
         protected bool IsAjax()
         {
             return Request.IsAjaxRequest();
+        }
+        protected ErrorResponse Error()
+        {
+            return new ErrorResponse();
+        }
+
+        protected ErrorResponse Error(string message, params object[] args)
+        {
+            ErrorResponse error = new ErrorResponse();
+            error.AddError(message, args);
+            return error;
+        }
+
+        protected TResult Error<TResult>(TResult result)
+             where TResult : SuccessResponse
+        {
+            result.Success = false;
+            return result;
+        }
+
+        protected TResult Error<TResult>(TResult result, string message, params object[] args)
+             where TResult : SuccessResponse
+        {
+            result.AddError(message, args);
+            result.Success = false;
+            return result;
+        }
+
+        protected bool IsSuccess(SuccessResponse response)
+        {
+            return (response != null) && response.Success;
+        }
+
+        protected SuccessResponse Success()
+        {
+            return new SuccessResponse();
+        }
+
+        protected SuccessResponse Success(bool success)
+        {
+            return new SuccessResponse(success);
         }
 
         protected bool Validate(params bool[] values)

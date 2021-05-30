@@ -33,17 +33,17 @@ namespace thZero.AspNetCore.Mvc
     {
         #region Protected Methods
         protected IActionResult InitializeJsonGetResult<T>(T model, Func<T, IActionResult> methodLoad)
-            where T : RequestViewModel
+            where T : class
         {
             return InitializeJsonGetResult(model, null, methodLoad);
         }
 
         protected IActionResult InitializeJsonGetResult<T>(T model, Func<T, bool> methodValidate, Func<T, IActionResult> methodLoad)
-            where T : RequestViewModel
+            where T : class
         {
             const string Declaration = "InitializeJsonGetResult";
 
-            Enforce.AgainstNull<RequestViewModel>(() => model);
+            Enforce.AgainstNull(() => model);
             Enforce.AgainstNull(() => methodLoad);
 
             try
@@ -67,17 +67,17 @@ namespace thZero.AspNetCore.Mvc
         }
 
         protected async Task<IActionResult> InitializeJsonGetResultAsync<T>(T model, Func<T, Task<IActionResult>> methodLoad)
-            where T : RequestViewModel
+            where T : class
         {
             return await InitializeJsonGetResultAsync<T>(model, null, methodLoad);
         }
 
         protected async Task<IActionResult> InitializeJsonGetResultAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<IActionResult>> methodLoad)
-            where T : RequestViewModel
+            where T : class
         {
             const string Declaration = "InitializeJsonGetResultAsync";
 
-            Enforce.AgainstNull<RequestViewModel>(() => model);
+            Enforce.AgainstNull(() => model);
             Enforce.AgainstNull(() => methodLoad);
 
             try
@@ -89,6 +89,73 @@ namespace thZero.AspNetCore.Mvc
                 }
 
                 return await Task.FromResult(await methodLoad(model));
+
+                throw new InvalidFailureException();
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(Declaration, ex);
+                throw;
+            }
+        }
+
+        protected IActionResult InitializeJsonPostResult<T>(T model, Func<T, IActionResult> methodPerform)
+            where T : class
+        {
+            return InitializeJsonPostResult(model, null, methodPerform);
+        }
+
+        protected IActionResult InitializeJsonPostResult<T>(T model, Func<T, bool> methodValidate, Func<T, IActionResult> methodPerform)
+            where T : class
+        {
+            const string Declaration = "InitializeJsonPostResult";
+
+            Enforce.AgainstNull(() => model);
+            Enforce.AgainstNull(() => methodPerform);
+
+            try
+            {
+                if (methodValidate != null)
+                {
+                    if (!methodValidate(model))
+                        return JsonPostFailure();
+                }
+
+                if (ModelState.IsValid)
+                    return methodPerform(model);
+
+                throw new InvalidFailureException();
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(Declaration, ex);
+                throw;
+            }
+        }
+
+        protected async Task<IActionResult> InitializeJsonPostResultAsync<T>(T model, Func<T, Task<IActionResult>> methodPerform)
+            where T : class
+        {
+            return await InitializeJsonPostResultAsync<T>(model, null, methodPerform);
+        }
+
+        protected async Task<IActionResult> InitializeJsonPostResultAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<IActionResult>> methodPerform)
+            where T : class
+        {
+            const string Declaration = "InitializeJsonPostResultAsync";
+
+            Enforce.AgainstNull(() => model);
+            Enforce.AgainstNull(() => methodPerform);
+
+            try
+            {
+                if (methodValidate != null)
+                {
+                    if (!(await methodValidate(model)))
+                        return await Task.FromResult(JsonPostFailure());
+                }
+
+                return await Task.FromResult(await methodPerform(model));
 
                 throw new InvalidFailureException();
             }

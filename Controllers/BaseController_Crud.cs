@@ -99,7 +99,7 @@ namespace thZero.AspNetCore.Mvc
         protected async Task<IActionResult> InitializeActionAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<bool>> methodLoad, string view)
             where T : RequestViewModel
         {
-            const string Declaration = "InitializeAction";
+            const string Declaration = "InitializeActionAsync";
 
             Enforce.AgainstNull<RequestViewModel>(() => model);
 
@@ -176,7 +176,7 @@ namespace thZero.AspNetCore.Mvc
         protected async Task<IActionResult> InitializeIActionResultAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<IActionResult>> methodLoad)
             where T : RequestViewModel
         {
-            const string Declaration = "InitializeIActionResult";
+            const string Declaration = "InitializeIActionResultAsync";
 
             Enforce.AgainstNull<RequestViewModel>(() => model);
             Enforce.AgainstNull(() => methodLoad);
@@ -232,7 +232,7 @@ namespace thZero.AspNetCore.Mvc
         protected async Task<IActionResult> InitializeIActionResultAsync<T>(T model, Func<T, Task<IActionResult>> methodValidate, Func<T, Task<IActionResult>> methodLoad)
             where T : RequestViewModel
         {
-            const string Declaration = "InitializeIActionResult";
+            const string Declaration = "InitializeIActionResultAsync";
 
             Enforce.AgainstNull<RequestViewModel>(() => model);
             Enforce.AgainstNull(() => methodLoad);
