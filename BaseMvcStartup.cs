@@ -310,7 +310,7 @@ namespace thZero.AspNetCore
             return null;
         }
 
-        protected virtual void ConfigureServicesInitializeMvcBuilder(IMvcCoreBuilder options)
+        protected virtual void ConfigureServicesInitializeMvcBuilder(IMvcCoreBuilder builder)
         {
         }
 
