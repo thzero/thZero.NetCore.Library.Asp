@@ -45,11 +45,7 @@ namespace thZero.AspNetCore
         {
             base.ConfigureInitializeServiceProvider(svp);
 
-            var site = svp.GetService<IOptions<TApplicationConfiguration>>();
-            if ((site == null) || (site.Value == null))
-                throw new Exception("Invalid Application configuration.");
-
-            Utilities.Web.Configuration.Application = site.Value;
+            Utilities.Web.Configuration.Application = ConfigurationOptions(svp);
         }
 
         protected override void ConfigureServicesInitializeMvcPost(IServiceCollection services)
@@ -58,6 +54,14 @@ namespace thZero.AspNetCore
 
             // Configuration Options...
             services.Configure<TApplicationConfiguration>(Configuration.GetSection("Application"));
+        }
+
+        protected TApplicationConfiguration ConfigurationOptions(IServiceProvider svp)
+        {
+            var site = svp.GetService<IOptions<TApplicationConfiguration>>();
+            if ((site == null) || (site.Value == null))
+                throw new Exception("Invalid Application configuration.");
+            return site.Value;
         }
         #endregion
     }
