@@ -61,7 +61,7 @@ namespace thZero.AspNetCore.Mvc
             }
             catch (Exception ex)
             {
-                Logger?.LogError(Declaration, ex);
+                Logger?.LogError2(Declaration, ex);
                 throw;
             }
         }
@@ -94,7 +94,7 @@ namespace thZero.AspNetCore.Mvc
             }
             catch (Exception ex)
             {
-                Logger?.LogError(Declaration, ex);
+                Logger?.LogError2(Declaration, ex);
                 throw;
             }
         }
@@ -128,7 +128,7 @@ namespace thZero.AspNetCore.Mvc
             }
             catch (Exception ex)
             {
-                Logger?.LogError(Declaration, ex);
+                Logger?.LogError2(Declaration, ex);
                 throw;
             }
         }
@@ -161,7 +161,7 @@ namespace thZero.AspNetCore.Mvc
             }
             catch (Exception ex)
             {
-                Logger?.LogError(Declaration, ex);
+                Logger?.LogError2(Declaration, ex);
                 throw;
             }
         }
