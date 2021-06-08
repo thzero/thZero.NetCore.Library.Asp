@@ -39,6 +39,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using thZero.AspNetCore.Filters.Instrumentation;
+using thZero.DependencyInjection;
 using thZero.Instrumentation;
 using thZero.Services;
 
@@ -164,6 +165,8 @@ namespace thZero.AspNetCore
 
             IWebHostEnvironment env = (IWebHostEnvironment)envDescriptor.ImplementationInstance;
             Enforce.AgainstNull(() => env);
+
+            services.AddSingleton<IServiceCollectionProvider>(new ServiceCollectionProvider(services));
 
             ConfigureServicesInitializePre(services, env);
 
