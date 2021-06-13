@@ -166,7 +166,7 @@ namespace thZero.AspNetCore
             IWebHostEnvironment env = (IWebHostEnvironment)envDescriptor.ImplementationInstance;
             Enforce.AgainstNull(() => env);
 
-            services.AddSingleton<IServiceCollectionProvider>(new ServiceCollectionProvider(services));
+            //services.AddSingleton<IServiceCollectionProvider>(new ServiceCollectionProvider(services));
 
             ConfigureServicesInitializePre(services, env);
 

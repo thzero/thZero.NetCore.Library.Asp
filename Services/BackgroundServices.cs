@@ -26,64 +26,34 @@ using Microsoft.Extensions.Logging;
 
 namespace thZero.AspNetCore.Services
 {
-    public abstract class BackgroundService<TService> : IHostedService, IDisposable
+    public abstract class BackgroundService<TService> : IHostedService
     {
         public BackgroundService(ILogger<TService> logger)
         {
-            _logger = logger;
+            Logger = logger;
         }
 
         #region Public Methods
-        public void Dispose()
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer?.Dispose();
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            const string Declaration = "StartAsync";
-
             Running = true;
-
-            int heartbeatInterval = HeartbeatInterval;
-            _timer = new Timer(o => {
-                Task.Run(async () => {
-                    try
-                    {
-                        await Run();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError2(Declaration, ex);
-                    }
-                }).Wait(cancellationToken);
-            },
-            null,
-            TimeSpan.Zero,
-            TimeSpan.FromSeconds(heartbeatInterval));
-
-            return Task.CompletedTask;
+            await StartAsyncI(cancellationToken);
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
             Running = false;
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
         #endregion
 
         #region Protected Methods
-        protected abstract Task Run();
+        protected abstract Task StartAsyncI(CancellationToken cancellationToken);
         #endregion
 
         #region Protected Properties
-        protected abstract int HeartbeatInterval { get; }
+        protected ILogger<TService> Logger { get; private set; }
         protected bool Running { get; private set; }
-        #endregion
-
-        #region Fields
-        private readonly ILogger<TService> _logger;
-        private Timer _timer;
         #endregion
     }
 }
