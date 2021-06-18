@@ -39,7 +39,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using thZero.AspNetCore.Filters.Instrumentation;
-using thZero.DependencyInjection;
 using thZero.Instrumentation;
 using thZero.Services;
 

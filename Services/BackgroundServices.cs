@@ -40,15 +40,19 @@ namespace thZero.AspNetCore.Services
             await StartAsyncI(cancellationToken);
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
+        public async virtual Task StopAsync(CancellationToken cancellationToken)
         {
             Running = false;
-            await Task.CompletedTask;
+            await StopAsyncI(cancellationToken);
         }
         #endregion
 
         #region Protected Methods
         protected abstract Task StartAsyncI(CancellationToken cancellationToken);
+        protected async virtual Task StopAsyncI(CancellationToken cancellationToken)
+        {
+            await Task.CompletedTask;
+        }
         #endregion
 
         #region Protected Properties
