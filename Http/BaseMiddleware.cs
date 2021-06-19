@@ -20,22 +20,21 @@ limitations under the License.
 using System;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace thZero.AspNetCore.Http
 {
-    public abstract class BaseMiddleware
+    public abstract class BaseMiddleware<TMiddleware>
     {
-        public BaseMiddleware(RequestDelegate next)
+        public BaseMiddleware(RequestDelegate next, ILogger<TMiddleware> logger)
         {
-            _next = next;
+            Next = next;
+            Logger = logger;
         }
 
         #region Protected Properties
-        protected RequestDelegate Next { get; }
-        #endregion
-
-        #region Fields
-        private readonly RequestDelegate _next;
+        protected ILogger<TMiddleware> Logger { get; private set; }
+        protected RequestDelegate Next { get; private set; }
         #endregion
     }
 }

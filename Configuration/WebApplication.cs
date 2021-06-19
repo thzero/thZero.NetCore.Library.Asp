@@ -43,7 +43,7 @@ namespace thZero.Configuration
     {
         #region Public Properties
         public string Key { get; set; }
-        public string GoogleAnalyticsDomain
+        public static string GoogleAnalyticsDomain
         {
             get
             {

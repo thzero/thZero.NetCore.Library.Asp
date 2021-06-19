@@ -60,9 +60,16 @@ namespace thZero.AspNetCore
         {
             var site = svp.GetService<IOptions<TApplicationConfiguration>>();
             if ((site == null) || (site.Value == null))
-                throw new Exception("Invalid Application configuration.");
+                throw new InvalidApplicationConfigurationException();
             return site.Value;
         }
         #endregion
+    }
+
+    public class InvalidApplicationConfigurationException : Exception
+    {
+        public InvalidApplicationConfigurationException() : base("Invalid Application configuration.")
+        {
+        }
     }
 }
