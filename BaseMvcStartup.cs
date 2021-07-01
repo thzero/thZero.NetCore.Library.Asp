@@ -157,6 +157,8 @@ namespace thZero.AspNetCore
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            ConfigureServicesConfiguration(services);
+
             RegisterStartupExtensions();
 
             ServiceDescriptor envDescriptor = services.Where(l => l.ServiceType.Equals(typeof(IWebHostEnvironment))).FirstOrDefault();
@@ -293,6 +295,10 @@ namespace thZero.AspNetCore
             });
         }
 
+        protected virtual void ConfigureServicesConfiguration(IServiceCollection services)
+        {
+        }
+
         protected virtual void ConfigureServicesInitializeMvcAntiforgery(IServiceCollection services)
         {
             string antiforgeryTokenName = ConfigureServicesInitializeMvcAntiforgeryTokenGenerate();
@@ -412,6 +418,7 @@ namespace thZero.AspNetCore
             if (extension == null)
                 return;
 
+            extension.RegisterStartupExtensions(StartupExtensions);
             StartupExtensions.Add(extension);
         }
 

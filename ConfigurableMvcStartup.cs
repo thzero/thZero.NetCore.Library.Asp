@@ -41,6 +41,12 @@ namespace thZero.AspNetCore
         }
 
         #region Protected Methods
+        protected override void ConfigureServicesConfiguration(IServiceCollection services)
+        {
+            // Configuration Options...
+            services.Configure<TApplicationConfiguration>(Configuration.GetSection("Application"));
+        }
+
         protected override void ConfigureInitializeServiceProvider(IServiceProvider svp)
         {
             base.ConfigureInitializeServiceProvider(svp);
@@ -48,13 +54,13 @@ namespace thZero.AspNetCore
             Utilities.Web.Configuration.Application = ConfigurationOptions(svp);
         }
 
-        protected override void ConfigureServicesInitializeMvcPost(IServiceCollection services)
-        {
-            base.ConfigureServicesInitializeMvcPost(services);
+        //protected override void ConfigureServicesInitializeMvcPost(IServiceCollection services)
+        //{
+        //    base.ConfigureServicesInitializeMvcPost(services);
 
-            // Configuration Options...
-            services.Configure<TApplicationConfiguration>(Configuration.GetSection("Application"));
-        }
+        //    // Configuration Options...
+        //    services.Configure<TApplicationConfiguration>(Configuration.GetSection("Application"));
+        //}
 
         protected TApplicationConfiguration ConfigurationOptions(IServiceProvider svp)
         {
@@ -64,6 +70,8 @@ namespace thZero.AspNetCore
             return site.Value;
         }
         #endregion
+
+        protected TApplicationConfiguration AppConfiguration { get { return (TApplicationConfiguration)Utilities.Web.Configuration.Application; } }
     }
 
     public class InvalidApplicationConfigurationException : Exception

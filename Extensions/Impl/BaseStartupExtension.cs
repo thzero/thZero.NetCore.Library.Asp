@@ -18,6 +18,7 @@ limitations under the License.
  * ------------------------------------------------------------------------- */
 
 using System;
+using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -113,6 +114,10 @@ namespace thZero.AspNetCore
         }
 
         public virtual void ConfigureServicesInitializeMvcPre(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
+        {
+        }
+
+        public virtual void RegisterStartupExtensions(ICollection<IStartupExtension> extensions)
         {
         }
         #endregion
