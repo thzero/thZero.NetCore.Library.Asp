@@ -35,6 +35,7 @@ namespace thZero.AspNetCore.Services
         public void Dispose()
         {
             _timer?.Dispose();
+            GC.SuppressFinalize(this);
         }
         #endregion
 
