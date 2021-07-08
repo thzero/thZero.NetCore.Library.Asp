@@ -109,7 +109,7 @@ namespace thZero.AspNetCore.Mvc
                 {
                     var resultV = await methodValidate(model);
                     if (Request.IsAjaxRequest())
-                        return await Task.FromResult(JsonGetFailure());
+                        return JsonGetFailure();
                 }
 
                 if (methodValidate != null)
@@ -117,9 +117,9 @@ namespace thZero.AspNetCore.Mvc
                     if (!await methodValidate(model))
                     {
                         if (Request.IsAjaxRequest())
-                            return await Task.FromResult(JsonGetFailure());
+                            return JsonGetFailure();
 
-                        return await Task.FromResult(!string.IsNullOrEmpty(view) ? View(view, model) : View(model));
+                        return !string.IsNullOrEmpty(view) ? View(view, model) : View(model);
                     }
                 }
 
@@ -188,7 +188,7 @@ namespace thZero.AspNetCore.Mvc
 
                 IActionResult result = await methodLoad(model);
                 if (result != null)
-                    return await Task.FromResult(result);
+                    return result;
 
                 throw new InvalidFailureException();
             }
@@ -243,12 +243,12 @@ namespace thZero.AspNetCore.Mvc
                 {
                     IActionResult resultV = await methodValidate(model);
                     if (resultV != null)
-                        return await Task.FromResult(resultV);
+                        return resultV;
                 }
 
                 IActionResult result = await methodLoad(model);
                 if (result != null)
-                    return await Task.FromResult(result);
+                    return result;
 
                 throw new InvalidFailureException();
             }

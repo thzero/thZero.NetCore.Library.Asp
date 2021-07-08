@@ -72,12 +72,16 @@ namespace thZero.AspNetCore.Mvc
             return await InitializeJsonGetResultAsync<T>(model, null, methodLoad);
         }
 
-        protected async Task<IActionResult> InitializeJsonGetResultAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<IActionResult>> methodLoad)
+        protected async Task<IActionResult> InitializeJsonGetResultAsync<T, U>(T model, Func<T, Task<U>> methodLoad)
             where T : class
+        {
+            return await InitializeJsonGetResultAsync<T, U>(model, null, methodLoad);
+        }
+
+        protected async Task<IActionResult> InitializeJsonGetResultAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<IActionResult>> methodLoad)
         {
             const string Declaration = "InitializeJsonGetResultAsync";
 
-            Enforce.AgainstNull(() => model);
             Enforce.AgainstNull(() => methodLoad);
 
             try
@@ -85,12 +89,58 @@ namespace thZero.AspNetCore.Mvc
                 if (methodValidate != null)
                 {
                     if (!(await methodValidate(model)))
-                        return await Task.FromResult(JsonGetFailure());
+                        return JsonGetFailure();
                 }
 
-                return await Task.FromResult(await methodLoad(model));
+                return Json(await methodLoad(model));
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError2(Declaration, ex);
+                throw;
+            }
+        }
 
-                throw new InvalidFailureException();
+        protected async Task<IActionResult> InitializeJsonGetResultAsync<T, U>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<U>> methodLoad)
+        {
+            const string Declaration = "InitializeJsonGetResultAsync";
+
+            Enforce.AgainstNull(() => methodLoad);
+
+            try
+            {
+                if (methodValidate != null)
+                {
+                    if (!(await methodValidate(model)))
+                        return JsonGetFailure();
+                }
+
+                return Json(await methodLoad(model));
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError2(Declaration, ex);
+                throw;
+            }
+        }
+
+        protected async Task<IActionResult> InitializeJsonGetResultAsync<TInput, TResponse, TOutput>(TInput model, Func<TInput, Task<bool>> methodValidate, Func<TInput, Task<TResponse>> methodLoad)
+            where TResponse : SuccessResponse<TOutput>
+            where TOutput : class
+        {
+            const string Declaration = "InitializeJsonGetResultAsync";
+
+            Enforce.AgainstNull(() => methodLoad);
+
+            try
+            {
+                if (methodValidate != null)
+                {
+                    if (!(await methodValidate(model)))
+                        return JsonGetFailure();
+                }
+
+                return Json(await methodLoad(model));
             }
             catch (Exception ex)
             {
@@ -100,17 +150,14 @@ namespace thZero.AspNetCore.Mvc
         }
 
         protected IActionResult InitializeJsonPostResult<T>(T model, Func<T, IActionResult> methodPerform)
-            where T : class
         {
             return InitializeJsonPostResult(model, null, methodPerform);
         }
 
         protected IActionResult InitializeJsonPostResult<T>(T model, Func<T, bool> methodValidate, Func<T, IActionResult> methodPerform)
-            where T : class
         {
             const string Declaration = "InitializeJsonPostResult";
 
-            Enforce.AgainstNull(() => model);
             Enforce.AgainstNull(() => methodPerform);
 
             try
@@ -134,17 +181,14 @@ namespace thZero.AspNetCore.Mvc
         }
 
         protected async Task<IActionResult> InitializeJsonPostResultAsync<T>(T model, Func<T, Task<IActionResult>> methodPerform)
-            where T : class
         {
             return await InitializeJsonPostResultAsync<T>(model, null, methodPerform);
         }
 
         protected async Task<IActionResult> InitializeJsonPostResultAsync<T>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<IActionResult>> methodPerform)
-            where T : class
         {
             const string Declaration = "InitializeJsonPostResultAsync";
 
-            Enforce.AgainstNull(() => model);
             Enforce.AgainstNull(() => methodPerform);
 
             try
@@ -152,12 +196,58 @@ namespace thZero.AspNetCore.Mvc
                 if (methodValidate != null)
                 {
                     if (!(await methodValidate(model)))
-                        return await Task.FromResult(JsonPostFailure());
+                        return JsonPostFailure();
                 }
 
-                return await Task.FromResult(await methodPerform(model));
+                return Json(await methodPerform(model));
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError2(Declaration, ex);
+                throw;
+            }
+        }
 
-                throw new InvalidFailureException();
+        protected async Task<IActionResult> InitializeJsonPostResultAsync<T, U>(T model, Func<T, Task<bool>> methodValidate, Func<T, Task<U>> methodLoad)
+        {
+            const string Declaration = "InitializeJsonPostResultAsync";
+
+            Enforce.AgainstNull(() => methodLoad);
+
+            try
+            {
+                if (methodValidate != null)
+                {
+                    if (!(await methodValidate(model)))
+                        return JsonPostFailure();
+                }
+
+                return Json(await methodLoad(model));
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError2(Declaration, ex);
+                throw;
+            }
+        }
+
+        protected async Task<IActionResult> InitializeJsonPostResultAsync<TInput, TResponse, TOutput>(TInput model, Func<TInput, Task<bool>> methodValidate, Func<TInput, Task<TResponse>> methodLoad)
+            where TResponse : SuccessResponse<TOutput>
+            where TOutput : class
+        {
+            const string Declaration = "InitializeJsonPostResultAsync";
+
+            Enforce.AgainstNull(() => methodLoad);
+
+            try
+            {
+                if (methodValidate != null)
+                {
+                    if (!(await methodValidate(model)))
+                        return JsonPostFailure();
+                }
+
+                return Json(await methodLoad(model));
             }
             catch (Exception ex)
             {

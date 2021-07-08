@@ -127,10 +127,10 @@ namespace thZero.AspNetCore.Mvc
                         return await Task.FromResult((isPost ? JsonPostFailure() : JsonGetFailure()));
 
                     if ((await methodDelete(model)) && Request.IsAjaxRequest())
-                        return await Task.FromResult(JsonPost());
+                        return JsonPost();
 
                     if (Request.IsAjaxRequest())
-                        return await Task.FromResult((isPost ? JsonPostFailure() : JsonGetFailure()));
+                        return (isPost ? JsonPostFailure() : JsonGetFailure());
 
                     return View(view);
                 }

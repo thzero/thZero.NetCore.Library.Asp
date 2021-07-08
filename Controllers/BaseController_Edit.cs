@@ -392,9 +392,9 @@ namespace thZero.AspNetCore.Mvc
                             if (result != null)
                             {
                                 if (Request.IsAjaxRequest())
-                                    return await Task.FromResult(JsonPost());
+                                    return JsonPost();
 
-                                return await Task.FromResult(result);
+                                return result;
                             }
 
                             throw new InvalidFailureException(InvalidFailureResult);
@@ -429,7 +429,7 @@ namespace thZero.AspNetCore.Mvc
                         await methodDelete(model, results);
                     await DeinitializeEditActionResultSuccessAsync();
 
-                    return await Task.FromResult(JsonPost());
+                    return JsonPost();
                 }
 
                 return await DeinitializeRequestHandleActionAsync<T>(model, results);
@@ -538,11 +538,14 @@ namespace thZero.AspNetCore.Mvc
                 {
                     var resultV = await methodValidate(model);
                     if (Request.IsAjaxRequest())
-                        return await Task.FromResult(JsonGetFailure());
+                        return JsonGetFailure();
                 }
 
                 if (methodLoad != null)
+                {
                     await methodLoad(model);
+                    return !string.IsNullOrEmpty(view) ? View(view, model) : View(model);
+                }
 
                 return await Task.FromResult(!string.IsNullOrEmpty(view) ? View(view, model) : View(model));
             }
@@ -605,12 +608,12 @@ namespace thZero.AspNetCore.Mvc
                 {
                     IActionResult resultV = await methodValidate(model);
                     if (resultV != null)
-                        return await Task.FromResult(resultV);
+                        return resultV;
                 }
 
                 IActionResult result = await methodLoad(model);
                 if (result != null)
-                    return await Task.FromResult(result);
+                    return result;
 
                 throw new InvalidFailureException();
             }

@@ -274,9 +274,9 @@ namespace thZero.AspNetCore.Mvc
                                 await DeinitializeInsertIActionResultSuccessAsync();
 
                                 if (Request.IsAjaxRequest())
-                                    return await Task.FromResult(JsonPost());
+                                    return JsonPost();
 
-                                return await Task.FromResult(!string.IsNullOrEmpty(view) ? View(view, model) : View(model));
+                                return !string.IsNullOrEmpty(view) ? View(view, model) : View(model);
                             }
                         }
                         catch (DeinitializeActionSuccessException ex)
@@ -516,14 +516,14 @@ namespace thZero.AspNetCore.Mvc
                             if (methodSuccess != null)
                                 result = await methodSuccess(model, previousModel, results);
 
-                            DeinitializeInsertIActionResultSuccess();
+                            await DeinitializeInsertIActionResultSuccessAsync();
 
                             if (result != null)
                             {
                                 if (Request.IsAjaxRequest())
-                                    return await Task.FromResult(JsonPost());
+                                    return JsonPost();
 
-                                return await Task.FromResult(result);
+                                return result;
                             }
 
                             throw new InvalidFailureException(InvalidFailureResult);
@@ -668,7 +668,7 @@ namespace thZero.AspNetCore.Mvc
                 {
                     var resultV = await methodValidate(model);
                     if (Request.IsAjaxRequest())
-                        return await Task.FromResult(JsonGetFailure());
+                        return JsonGetFailure();
                 }
 
                 if (methodValidate != null)
@@ -676,14 +676,17 @@ namespace thZero.AspNetCore.Mvc
                     if (!await methodValidate(model))
                     {
                         if (Request.IsAjaxRequest())
-                            return await Task.FromResult(JsonGetFailure());
+                            return JsonGetFailure();
 
-                        return await Task.FromResult(!string.IsNullOrEmpty(view) ? View(view, model) : View(model));
+                        return !string.IsNullOrEmpty(view) ? View(view, model) : View(model);
                     }
                 }
 
                 if (methodLoad != null)
+                {
                     await methodLoad(model);
+                    return !string.IsNullOrEmpty(view) ? View(view, model) : View(model);
+                }
 
                 return await Task.FromResult(!string.IsNullOrEmpty(view) ? View(view, model) : View(model));
             }
