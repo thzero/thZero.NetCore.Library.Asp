@@ -41,6 +41,14 @@ namespace thZero.AspNetCore
         {
         }
 
+        public virtual void ConfigureInitializeAuthentication(IApplicationBuilder app)
+        {
+        }
+
+        public virtual void ConfigureInitializeAuthorization(IApplicationBuilder app)
+        {
+        }
+
         public virtual void ConfigureInitializePost(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
         }
@@ -82,6 +90,14 @@ namespace thZero.AspNetCore
         }
 
         public virtual void ConfigureServicesPre(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
+        {
+        }
+
+        public virtual void ConfigureServicesInitializeAuthentication(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
+        {
+        }
+
+        public virtual void ConfigureServicesInitializeAuthorization(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
         {
         }
 

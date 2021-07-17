@@ -34,6 +34,8 @@ namespace thZero.AspNetCore
     {
         void ConfigurePost(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
         void ConfigurePre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
+        void ConfigureInitializeAuthentication(IApplicationBuilder app);
+        void ConfigureInitializeAuthorization(IApplicationBuilder app);
         void ConfigureInitializePost(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
         void ConfigureInitializePre(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp);
         void ConfigureInitializeFinalPre(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp);
@@ -51,6 +53,8 @@ namespace thZero.AspNetCore
         void ConfigureServicesInitializeMvcBuilderPre(IMvcCoreBuilder builder);
         void ConfigureServicesInitializeMvcBuilderOptionsPost(MvcOptions options);
         void ConfigureServicesInitializeMvcBuilderOptionsPre(MvcOptions options);
+        void ConfigureServicesInitializeAuthentication(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration);
+        void ConfigureServicesInitializeAuthorization(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration);
         void ConfigureServicesInitializeMvcPost(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration);
         void ConfigureServicesInitializeMvcPre(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration);
         void RegisterStartupExtensions(ICollection<IStartupExtension> extensions);

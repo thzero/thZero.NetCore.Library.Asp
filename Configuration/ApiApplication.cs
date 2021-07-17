@@ -21,18 +21,12 @@ using System;
 
 namespace thZero.Configuration
 {
-    public class ApiApplication<TDefaults, TEmail, TAuthorization> : Application<TDefaults, TEmail>
+    public class ApiApplication<TDefaults, TEmail> : Application<TDefaults, TEmail>
         where TDefaults : ApplicationDefaults
         where TEmail : ApplicationEmail
-        where TAuthorization : class
     {
         public ApiApplication()
         {
-            Authorization = Utilities.Activator.CreateInstanceEx<TAuthorization>();
         }
-
-        #region Public Properties
-        public TAuthorization Authorization { get; set; }
-        #endregion
     }
 }

@@ -176,6 +176,8 @@ namespace thZero.AspNetCore
 
             services.AddSingleton<IServiceVersionInformation, ServiceVersionInformation>();
 
+            ConfigureServicesInitializeCors(services);
+
             ConfigureServicesInitializeMvcPre(services);
 
             if (StartupExtensions != null)
@@ -189,6 +191,16 @@ namespace thZero.AspNetCore
                 StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcPost(services, env, Configuration));
 
             ConfigureServicesInitializeMvcPost(services);
+
+            ConfigureServicesInitializeAuthentication(services, env, Configuration);
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeAuthentication(services, env, Configuration));
+
+            ConfigureServicesInitializeAuthorization(services, env, Configuration);
+
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeAuthorization(services, env, Configuration));
 
             // Only if UseCompression middleware was enabled on the IApplicationBuilder...
             _useCompression = ConfigureServicesInitializeCompression(services);
@@ -210,6 +222,21 @@ namespace thZero.AspNetCore
             else
                 ConfigureInitializeProduction(app, env, svp);
         }
+        
+        protected virtual void ConfigureInitializeAuthentication(IApplicationBuilder app)
+        {
+            //app.UseAuthentication();
+        }
+
+        protected virtual void ConfigureInitializeAuthorization(IApplicationBuilder app)
+        {
+            //app.UseAuthorization();
+        }
+
+        protected virtual void ConfigureInitializeCors(IApplicationBuilder app)
+        {
+            app.UseCors();
+        }
 
         protected virtual void ConfigureInitializeCompression(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -229,7 +256,18 @@ namespace thZero.AspNetCore
 
         protected virtual void ConfigureInitializeRouting(IApplicationBuilder app)
         {
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-5.0#middleware-order
             app.UseRouting();
+
+            ConfigureInitializeCors(app);
+
+            ConfigureInitializeAuthentication(app);
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeAuthentication(app));
+
+            ConfigureInitializeAuthorization(app);
+            if (StartupExtensions != null)
+                StartupExtensions.ToList().ForEach(l => l.ConfigureInitializeAuthorization(app));
 
             app.UseEndpoints(endpointsRouteBuilder =>
             {
@@ -297,6 +335,38 @@ namespace thZero.AspNetCore
 
         protected virtual void ConfigureServicesConfiguration(IServiceCollection services)
         {
+        }
+
+        protected virtual void ConfigureServicesInitializeAuthentication(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
+        {
+        }
+
+        protected virtual void ConfigureServicesInitializeAuthorization(IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
+        {
+        }
+
+        protected virtual void ConfigureServicesInitializeCors(IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                ConfigureServicesInitializeCorsOptions(options);
+            });
+        }
+
+        protected virtual void ConfigureServicesInitializeCorsOptions(Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions options)
+        {
+            options.AddDefaultPolicy(
+                builder =>
+                {
+                    //builder.WithOrigins("http://localhost:8080")
+                    //    .AllowAnyHeader()
+                    //    .AllowAnyMethod()
+                    //    .AllowCredentials();
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
         }
 
         protected virtual void ConfigureServicesInitializeMvcAntiforgery(IServiceCollection services)

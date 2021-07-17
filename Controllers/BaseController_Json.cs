@@ -19,12 +19,13 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-using thZero.AspNetCore.Mvc.Views.Models;
+using thZero.AspNetCore.Results;
 using thZero.Responses;
 
 namespace thZero.AspNetCore.Mvc
@@ -54,10 +55,21 @@ namespace thZero.AspNetCore.Mvc
                         return JsonGetFailure();
                 }
 
-                if (ModelState.IsValid)
-                    return methodLoad(model);
+                if (!ModelState.IsValid)
+                {
+                    SubmitResult results = new();
 
-                throw new InvalidFailureException();
+                    var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                    if (Request.IsAjaxRequest())
+                        return JsonPostFailure(allErrors.Select(l => l.ErrorMessage));
+
+                    foreach (var error in results.Errors)
+                        ModelState.AddModelError(error.InputElement, error.Message);
+
+                    throw new InvalidFailureException(InvalidFailureResult);
+                }
+
+                return methodLoad(model);
             }
             catch (Exception ex)
             {
@@ -92,6 +104,20 @@ namespace thZero.AspNetCore.Mvc
                         return JsonGetFailure();
                 }
 
+                if (!ModelState.IsValid)
+                {
+                    SubmitResult results = new();
+
+                    var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                    if (Request.IsAjaxRequest())
+                        return JsonPostFailure(allErrors.Select(l => l.ErrorMessage));
+
+                    foreach (var error in results.Errors)
+                        ModelState.AddModelError(error.InputElement, error.Message);
+
+                    throw new InvalidFailureException(InvalidFailureResult);
+                }
+
                 return Json(await methodLoad(model));
             }
             catch (Exception ex)
@@ -113,6 +139,20 @@ namespace thZero.AspNetCore.Mvc
                 {
                     if (!(await methodValidate(model)))
                         return JsonGetFailure();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    SubmitResult results = new();
+
+                    var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                    if (Request.IsAjaxRequest())
+                        return JsonPostFailure(allErrors.Select(l => l.ErrorMessage));
+
+                    foreach (var error in results.Errors)
+                        ModelState.AddModelError(error.InputElement, error.Message);
+
+                    throw new InvalidFailureException(InvalidFailureResult);
                 }
 
                 return Json(await methodLoad(model));
@@ -138,6 +178,20 @@ namespace thZero.AspNetCore.Mvc
                 {
                     if (!(await methodValidate(model)))
                         return JsonGetFailure();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    SubmitResult results = new();
+
+                    var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                    if (Request.IsAjaxRequest())
+                        return JsonPostFailure(allErrors.Select(l => l.ErrorMessage));
+
+                    foreach (var error in results.Errors)
+                        ModelState.AddModelError(error.InputElement, error.Message);
+
+                    throw new InvalidFailureException(InvalidFailureResult);
                 }
 
                 return Json(await methodLoad(model));
@@ -171,7 +225,16 @@ namespace thZero.AspNetCore.Mvc
                 if (ModelState.IsValid)
                     return methodPerform(model);
 
-                throw new InvalidFailureException();
+                SubmitResult results = new();
+
+                var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                if (Request.IsAjaxRequest())
+                    return JsonPostFailure(allErrors.Select(l => l.ErrorMessage));
+
+                foreach (var error in results.Errors)
+                    ModelState.AddModelError(error.InputElement, error.Message);
+
+                throw new InvalidFailureException(InvalidFailureResult);
             }
             catch (Exception ex)
             {
@@ -199,6 +262,20 @@ namespace thZero.AspNetCore.Mvc
                         return JsonPostFailure();
                 }
 
+                if (!ModelState.IsValid)
+                {
+                    SubmitResult results = new();
+
+                    var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                    if (Request.IsAjaxRequest())
+                        return JsonPostFailure(allErrors.Select(l => l.ErrorMessage));
+
+                    foreach (var error in results.Errors)
+                        ModelState.AddModelError(error.InputElement, error.Message);
+
+                    throw new InvalidFailureException(InvalidFailureResult);
+                }
+
                 return Json(await methodPerform(model));
             }
             catch (Exception ex)
@@ -220,6 +297,23 @@ namespace thZero.AspNetCore.Mvc
                 {
                     if (!(await methodValidate(model)))
                         return JsonPostFailure();
+                }
+
+                if (!ModelState.IsValid)
+                    return JsonPostFailure();
+
+                if (!ModelState.IsValid)
+                {
+                    SubmitResult results = new();
+
+                    var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                    if (Request.IsAjaxRequest())
+                        return JsonPostFailure(allErrors.Select(l => l.ErrorMessage));
+
+                    foreach (var error in results.Errors)
+                        ModelState.AddModelError(error.InputElement, error.Message);
+
+                    throw new InvalidFailureException(InvalidFailureResult);
                 }
 
                 return Json(await methodLoad(model));
@@ -247,6 +341,20 @@ namespace thZero.AspNetCore.Mvc
                         return JsonPostFailure();
                 }
 
+                if (!ModelState.IsValid)
+                {
+                    SubmitResult results = new();
+
+                    var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                    if (Request.IsAjaxRequest())
+                        return JsonPostFailure(allErrors.Select(l => l.ErrorMessage));
+
+                    foreach (var error in results.Errors)
+                        ModelState.AddModelError(error.InputElement, error.Message);
+
+                    throw new InvalidFailureException(InvalidFailureResult);
+                }
+
                 return Json(await methodLoad(model));
             }
             catch (Exception ex)
@@ -268,13 +376,13 @@ namespace thZero.AspNetCore.Mvc
 
         protected virtual JsonResult JsonGet(object data)
         {
-            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Data = data });
+            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Results = data });
         }
 
         protected virtual JsonResult JsonGet<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Data = data });
+            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Results = data });
         }
 
         protected virtual JsonResult JsonGetFailure(string message)
@@ -299,13 +407,13 @@ namespace thZero.AspNetCore.Mvc
 
         protected virtual JsonResult JsonPost(object data)
         {
-            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Data = data });
+            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Results = data });
         }
 
         protected virtual JsonResult JsonPost<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Data = data });
+            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Results = data });
         }
 
         protected virtual JsonResult JsonPostFailure()
@@ -326,13 +434,13 @@ namespace thZero.AspNetCore.Mvc
         protected virtual JsonResult JsonPostFailure<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new SuccessResponse<T>() { Success = false, Data = data });
+            return new JsonResultEx(new SuccessResponse<T>() { Success = false, Results = data });
         }
 
         protected virtual JsonResult JsonPostFailure<T>(T data, string message)
             where T : class
         {
-            return new JsonResultEx((new SuccessResponse<T>() { Success = false, Data = data }).AddError(message));
+            return new JsonResultEx((new SuccessResponse<T>() { Success = false, Results = data }).AddError(message));
         }
         #endregion
     }

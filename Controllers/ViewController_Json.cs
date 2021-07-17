@@ -43,7 +43,7 @@ namespace thZero.AspNetCore.Mvc
         protected override JsonResult JsonGet<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Data = data });
+            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Results = data });
         }
 
         protected override JsonResult JsonGetFailure(string message)

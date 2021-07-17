@@ -166,7 +166,7 @@ namespace thZero.AspNetCore.Mvc
 
         protected JsonResult JsonDelete(object data)
         {
-            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Data = data });
+            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Results = data });
         }
 
         protected JsonResult JsonViewDelete(object data)
@@ -177,7 +177,7 @@ namespace thZero.AspNetCore.Mvc
         protected JsonResult JsonDelete<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Data = data });
+            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Results = data });
         }
 
         protected JsonResult JsonViewDelete<T>(T data)
