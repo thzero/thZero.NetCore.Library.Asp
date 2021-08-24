@@ -48,6 +48,13 @@ namespace thZero.AspNetCore.Mvc
             return error;
         }
 
+        protected static ErrorResponse Error(IInstrumentationPacket instrumentation, string message, params object[] args)
+        {
+            ErrorResponse error = new(instrumentation);
+            error.AddError(message, args);
+            return error;
+        }
+
         protected static TResult Error<TResult>(TResult result)
              where TResult : SuccessResponse
         {
@@ -55,9 +62,26 @@ namespace thZero.AspNetCore.Mvc
             return result;
         }
 
+        protected static TResult Error<TResult>(IInstrumentationPacket instrumentation, TResult result)
+             where TResult : SuccessResponse
+        {
+            result.Instrumentation = instrumentation;
+            result.Success = false;
+            return result;
+        }
+
         protected static TResult Error<TResult>(TResult result, string message, params object[] args)
              where TResult : SuccessResponse
         {
+            result.AddError(message, args);
+            result.Success = false;
+            return result;
+        }
+
+        protected static TResult Error<TResult>(IInstrumentationPacket instrumentation, TResult result, string message, params object[] args)
+             where TResult : SuccessResponse
+        {
+            result.Instrumentation = instrumentation;
             result.AddError(message, args);
             result.Success = false;
             return result;

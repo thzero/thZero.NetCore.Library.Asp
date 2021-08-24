@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO.Compression;
 using System.Linq;
-
+using System.Text.Json;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -455,6 +455,13 @@ namespace thZero.AspNetCore
 
                 if (StartupExtensions != null)
                     StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPost(mvcBuilder));
+
+                mvcBuilder.AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                });
             }
             else
             {
@@ -478,6 +485,13 @@ namespace thZero.AspNetCore
 
                 if (StartupExtensions != null)
                     StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPost(mvcBuilder));
+
+                mvcBuilder.AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                });
             }
         }
 

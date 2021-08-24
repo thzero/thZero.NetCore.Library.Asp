@@ -300,9 +300,6 @@ namespace thZero.AspNetCore.Mvc
                 }
 
                 if (!ModelState.IsValid)
-                    return JsonPostFailure();
-
-                if (!ModelState.IsValid)
                 {
                     SubmitResult results = new();
 
@@ -371,76 +368,76 @@ namespace thZero.AspNetCore.Mvc
         #region Protected Methods
         protected virtual JsonResult JsonGet()
         {
-            return JsonGet(null);
+            return JsonGet(new SuccessResponse());
         }
 
         protected virtual JsonResult JsonGet(object data)
         {
-            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Results = data });
+            return Json(new SuccessResponse<object>() { Results = data });
         }
 
         protected virtual JsonResult JsonGet<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Results = data });
+            return Json(new SuccessResponse<T>() { Results = data });
         }
 
         protected virtual JsonResult JsonGetFailure(string message)
         {
-            return new JsonResultEx((new ErrorResponse()).AddError(message));
+            return Json((new ErrorResponse()).AddError(message));
         }
 
         protected virtual JsonResult JsonGetFailure()
         {
-            return new JsonResultEx(new ErrorResponse());
+            return Json(new ErrorResponse());
         }
 
         protected virtual JsonResult JsonVGetSelect(IEnumerable<SelectListItem> list)
         {
-            return new JsonResultEx(new SearchSuccessResponse<SelectListItem>() { Success = true, Data = list });
+            return Json(new SearchSuccessResponse<SelectListItem>() { Data = list });
         }
 
         protected virtual JsonResult JsonPost()
         {
-            return JsonPost(null);
+            return Json(new SuccessResponse());
         }
 
         protected virtual JsonResult JsonPost(object data)
         {
-            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Results = data });
+            return Json(new SuccessResponse<object>() { Results = data });
         }
 
         protected virtual JsonResult JsonPost<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Results = data });
+            return Json(new SuccessResponse<T>() { Results = data });
         }
 
         protected virtual JsonResult JsonPostFailure()
         {
-            return new JsonResultEx(new ErrorResponse());
+            return Json(new ErrorResponse());
         }
 
         protected virtual JsonResult JsonPostFailure(IEnumerable<string> errors)
         {
-            return new JsonResultEx((new ErrorResponse()).AddErrors(errors));
+            return Json((new ErrorResponse()).AddErrors(errors));
         }
 
         protected virtual JsonResult JsonPostFailure(string message)
         {
-            return new JsonResultEx((new ErrorResponse()).AddError(message));
+            return Json((new ErrorResponse()).AddError(message));
         }
 
         protected virtual JsonResult JsonPostFailure<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new SuccessResponse<T>() { Success = false, Results = data });
+            return Json(new SuccessResponse<T>() { Success = false, Results = data });
         }
 
         protected virtual JsonResult JsonPostFailure<T>(T data, string message)
             where T : class
         {
-            return new JsonResultEx((new SuccessResponse<T>() { Success = false, Results = data }).AddError(message));
+            return Json((new SuccessResponse<T>() { Success = false, Results = data }).AddError(message));
         }
         #endregion
     }

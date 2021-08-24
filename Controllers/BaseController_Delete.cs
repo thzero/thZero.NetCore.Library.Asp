@@ -166,44 +166,44 @@ namespace thZero.AspNetCore.Mvc
 
         protected JsonResult JsonDelete(object data)
         {
-            return new JsonResultEx(new SuccessResponse<object>() { Success = true, Results = data });
+            return Json(new SuccessResponse<object>() { Success = true, Results = data });
         }
 
         protected JsonResult JsonViewDelete(object data)
         {
-            return new JsonResultEx(new JsonOutputResponseViewModel<object>() { Success = true, Data = data });
+            return Json(new JsonOutputResponseViewModel<object>() { Success = true, Data = data });
         }
 
         protected JsonResult JsonDelete<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Results = data });
+            return Json(new SuccessResponse<T>() { Success = true, Results = data });
         }
 
         protected JsonResult JsonViewDelete<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new JsonOutputResponseViewModel<T>() { Success = true, Data = data });
+            return Json(new JsonOutputResponseViewModel<T>() { Success = true, Data = data });
         }
 
         protected virtual JsonResult JsonDeleteFailure(string message)
         {
-            return new JsonResultEx((new ErrorResponse()).AddError(message));
+            return Json((new ErrorResponse()).AddError(message));
         }
 
         protected virtual JsonResult JsonViewDeleteFailure(string message)
         {
-            return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddError(message));
+            return Json((new JsonOutputErrorResponseViewModel()).AddError(message));
         }
 
         protected virtual JsonResult JsonDeleteFailure()
         {
-            return new JsonResultEx(new ErrorResponse());
+            return Json(new ErrorResponse());
         }
 
         protected virtual JsonResult JsonViewDeleteFailure()
         {
-            return new JsonResultEx(new JsonOutputErrorResponseViewModel());
+            return Json(new JsonOutputErrorResponseViewModel());
         }
         #endregion
     }

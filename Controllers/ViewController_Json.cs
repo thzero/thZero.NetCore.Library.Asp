@@ -37,66 +37,66 @@ namespace thZero.AspNetCore.Mvc
         #region Protected Methods
         protected override JsonResult JsonGet(object data)
         {
-            return new JsonResultEx(new JsonOutputResponseViewModel<object>() { Success = true, Data = data });
+            return Json(new JsonOutputResponseViewModel<object>() { Success = true, Data = data });
         }
 
         protected override JsonResult JsonGet<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new SuccessResponse<T>() { Success = true, Results = data });
+            return Json(new SuccessResponse<T>() { Success = true, Results = data });
         }
 
         protected override JsonResult JsonGetFailure(string message)
         {
-            return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddError(message));
+            return Json((new JsonOutputErrorResponseViewModel()).AddError(message));
         }
 
         protected override JsonResult JsonGetFailure()
         {
-            return new JsonResultEx(new JsonOutputErrorResponseViewModel());
+            return Json(new JsonOutputErrorResponseViewModel());
         }
 
         protected virtual JsonResult JsonGetSelect(IEnumerable<SelectListItem> list)
         {
-            return new JsonResultEx(new JsonOutputSearchResponseViewModel<SelectListItem>() { Success = true, Data = list });
+            return Json(new JsonOutputSearchResponseViewModel<SelectListItem>() { Success = true, Data = list });
         }
 
         protected override JsonResult JsonPost(object data)
         {
-            return new JsonResultEx(new JsonOutputResponseViewModel<object>() { Success = true, Data = data });
+            return Json(new JsonOutputResponseViewModel<object>() { Success = true, Data = data });
         }
 
         protected override JsonResult JsonPost<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new JsonOutputResponseViewModel<T>() { Success = true, Data = data });
+            return Json(new JsonOutputResponseViewModel<T>() { Success = true, Data = data });
         }
 
         protected override JsonResult JsonPostFailure()
         {
-            return new JsonResultEx(new JsonOutputErrorResponseViewModel());
+            return Json(new JsonOutputErrorResponseViewModel());
         }
 
         protected override JsonResult JsonPostFailure(IEnumerable<string> errors)
         {
-            return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddErrors(errors));
+            return Json((new JsonOutputErrorResponseViewModel()).AddErrors(errors));
         }
 
         protected override JsonResult JsonPostFailure(string message)
         {
-            return new JsonResultEx((new JsonOutputErrorResponseViewModel()).AddError(message));
+            return Json((new JsonOutputErrorResponseViewModel()).AddError(message));
         }
 
         protected override JsonResult JsonPostFailure<T>(T data)
             where T : class
         {
-            return new JsonResultEx(new JsonOutputResponseViewModel<T>() { Success = false, Data = data });
+            return Json(new JsonOutputResponseViewModel<T>() { Success = false, Data = data });
         }
 
         protected override JsonResult JsonPostFailure<T>(T data, string message)
             where T : class
         {
-            return new JsonResultEx((new JsonOutputResponseViewModel<T>() { Success = false, Data = data }).AddError(message));
+            return Json((new JsonOutputResponseViewModel<T>() { Success = false, Data = data }).AddError(message));
         }
         #endregion
     }
