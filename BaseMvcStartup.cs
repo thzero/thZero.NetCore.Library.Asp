@@ -445,8 +445,7 @@ namespace thZero.AspNetCore
 
                     if (StartupExtensions != null)
                         StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPost(options));
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                });
 
                 if (StartupExtensions != null)
                     StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
@@ -475,8 +474,7 @@ namespace thZero.AspNetCore
 
                     if (StartupExtensions != null)
                         StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderOptionsPost(options));
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                });
 
                 if (StartupExtensions != null)
                     StartupExtensions.ToList().ForEach(l => l.ConfigureServicesInitializeMvcBuilderPre(mvcBuilder));
